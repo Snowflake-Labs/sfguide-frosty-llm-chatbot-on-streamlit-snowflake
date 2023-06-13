@@ -3,6 +3,7 @@ import re
 from . import prompts
 from .utils import llm_chat
 
+# TODO: Update this app to actually run successfully, verify it with basic prompts
 st.title("Frosty")
 
 # Initialize the chat messages history
