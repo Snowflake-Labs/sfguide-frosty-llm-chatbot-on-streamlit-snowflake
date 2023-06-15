@@ -1,199 +1,144 @@
-summary: This is a sample Snowflake Guide
-id: sample 
-categories: undefined
+summary: This guide provides the instructions for writing an LLM chatbot in Streamlit on your Snowflake data.
+id: frosty_llm_chatbot_streamlit
+categories: data-science-&-ml,app-development // I don't think we have an LLM or Streamlit category
 environments: web
 status: Hidden 
 feedback link: https://github.com/Snowflake-Labs/sfguides/issues
-tags: Getting Started, Data Science, Data Engineering, Twitter 
-authors: Snowflake
+tags: Snowpark Python, Streamlit, OpenAI, LLMs // Is LLMs a valid tag?
+authors: jcarroll, rmeng, cfrasca
 
 # Frosty: Build a LLM Chatbot in Streamlit on your Snowflake Data
 <!-- ------------------------ -->
 ## Overview 
-Duration: 1
-
-Please use [this markdown file](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/_template/markdown.template) as a template for writing your own Snowflake Quickstarts. This example guide has elements that you will use when writing your own quickstarts, including: code snippet highlighting, downloading files, inserting photos, and more. 
-
-It is important to include on the first page of your guide the following sections: Prerequisites, What you'll learn, What you'll need, and What you'll build. Remember, part of the purpose of a Snowflake Guide is that the reader will have **built** something by the end of the tutorial; this means that actual code needs to be included (not just pseudo-code or concepts).
-
-The rest of this Snowflake Guide explains the steps of writing your own guide. 
-
-### Prerequisites
-- Familiarity with Markdown syntax
-
-### What You’ll Learn 
-- how to set the metadata for a guide (category, author, id, etc)
-- how to set the amount of time each slide will take to finish 
-- how to include code snippets 
-- how to hyperlink items 
-- how to include images 
-
-### What You’ll Need 
-- A [GitHub](https://github.com/) Account 
-- [VSCode](https://code.visualstudio.com/download) Installed
-- [NodeJS](https://nodejs.org/en/download/) Installed
-- [GoLang](https://golang.org/doc/install) Installed
-
-### What You’ll Build 
-- A Snowflake Guide
-
-<!-- ------------------------ -->
-## Metadata Configuration
 Duration: 2
 
-It is important to set the correct metadata for your Snowflake Guide. The metadata contains all the information required for listing and publishing your guide and includes the following:
+![logo-image](assets/quickstart_screenshot1.png)
 
+In this guide, we will build an LLM-powered chatbot named "Frosty" that performs data exploration and question answering by writing and executing SQL queries on Snowflake data.
 
-- **summary**: This is a sample Snowflake Guide 
-  - This should be a short, 1 sentence description of your guide. This will be visible on the main landing page. 
-- **id**: sample 
-  - make sure to match the id here with the name of the file, all one word.
-- **categories**: data-science 
-  - You can have multiple categories, but the first one listed is used for the icon.
-- **environments**: web 
-  - `web` is default. If this will be published for a specific event or  conference, include it here.
-- **status**: Published
-  - (`Draft`, `Published`, `Deprecated`, `Hidden`) to indicate the progress and whether the sfguide is ready to be published. `Hidden` implies the sfguide is for restricted use, should be available only by direct URL, and should not appear on the main landing page.
-- **feedback link**: https://github.com/Snowflake-Labs/sfguides/issues
-- **tags**: Getting Started, Data Science, Twitter 
-  - Add relevant  tags to make your sfguide easily found and SEO friendly.
-- **authors**: Daniel Myers 
-  - Indicate the author(s) of this specific sfguide.
+The application uses Streamlit and Snowflake and can be plugged into your LLM of choice, alongside data from Snowflake Marketplace. By the end of the session, you will have an interactive web application chatbot which can converse and answer questions based on a public job listings dataset.
+
+### Key Features & Technology
+
+// *TODO: Describe what these are somewhere / why they matter*
+
+* Large Language Models (LLMs)
+* Streamlit
+* Snowflake Marketplace
+
+### Prerequisites
+
+* Accountadmin role access in Snowflake or a Snowflake trial account: [https://signup.snowflake.com/](https://signup.snowflake.com/)
+* Access (API Key) for OpenAI or another Large Language Model
+* Basic knowledge of SQL, database concepts, and objects
+* Familiarity with Python.  All code for the lab is provided.
+* Ability to install and run software on your computer
+* [VSCode](https://code.visualstudio.com/download) installed
+
+### What you'll learn
+
+### What you'll build
+
+<!-- ------------------------ -->
+## Prepare your environment
+Duration: 8
+
+// *TODO: VERIFY THESE INSTRUCTIONS WORK!!!*
+
+1. Install conda to manage a separate environment by running pip install conda. NOTE: The other option is to use [Miniconda](https://docs.conda.io/en/latest/miniconda.html)
+2. Open the terminal or command prompt
+
+> aside positive
+> IMPORTANT:
+> If you are using a machine wth Apple M1 chip, follow [these instructons](https://docs.snowflake.com/en/developer-guide/snowpark/python/setup) to create the virtual environment and install Snowpark Python instead of what's described below.
+
+3. Create environment by running `conda create --name snowpark -c https://repo.anaconda.com/pkgs/snowflake python=3.8`
+4. Activate conda environment by running `conda activate snowpark`
+5. Install Snowpark for Python and openai by running `conda install -c https://repo.anaconda.com/pkgs/snowflake snowflake-snowpark-python openai`
+6. Install Streamlit by running `pip install streamlit` or `conda install streamlit`
 
 ---
 
-You can see the source metadata for this guide you are reading now, on [the github repo](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/_template/markdown.template).
+### Troubleshooting `pyarrow` related issues
 
+- If you have `pyarrow` library already installed, uninstall it before installing Snowpark.
+- If you do not have `pyarrow` installed, you do not need to install it yourself; installing Snowpark automatically installs the appropriate version.
+- Do not reinstall a different version of `pyarrow` after installing Snowpark.
 
 <!-- ------------------------ -->
-## Creating a Step
-Duration: 2
+## Accessing Data on Snowflake Marketplace
 
-A single sfguide consists of multiple steps. These steps are defined in Markdown using Header 2 tag `##`. 
+Duration: 4
 
-```markdown
-## Step 1 Title
-Duration: 3
+Snowflake Marketplace provides visibility to a wide variety of datasets from third-party data stewards which broaden access to data points used to transform business processes. Snowflake Marketplace also removes the need to integrate and model data by providing secure access to data sets fully maintained by the data provider.
 
-All the content for the step goes here.
+// *TODO: Log into snowsight*
 
-## Step 2 Title
+* At the top left corner, make sure you are logged in as ACCOUNTADMIN, switch role if not
+* Click on Marketplace
+* At the Search bar, type: CyberSyn SEC then click on the Tile Box labeled: CyberSyn SEC Company Filings.
+
+
+![alt_text](assets/CyberSyn_SEC_Marketplace_Listing_marked.png)
+
+* At the top right corner, Select Get Data
+* Select the appropriate roles to access the Database being created and accept the Snowflake consumer terms and CyberSyn's terms of use.
+* Create Database
+
+![alt_text](assets/CyberSyn_Complete.png)
+
+* At this point you can select Query Data, this will open a worksheet with example queries.
+
+// *TODO: Add example queries image?*
+
+* We are interested in ... data, so we will use this query to explore the data for the application:
+`Add a question here`
+
+    ```sql
+    Add a sample SQL query here for the relevant table
+    ```
+
+<!-- ------------------------ -->
+## Setting up Streamlit environment
 Duration: 1
 
-All the content for the step goes here.
+- Do a streamlit hello / hello world app
+- Add snowflake creds to secrets and confirm query access to the table from the last section to st.dataframe
+- Add openai key to secrets and confirm openai access is working (simple completion)
+
+### Example secrets file
+
+```toml
+# .streamlit/secrets.toml
+
+OPENAI_API_KEY = "sk-2v...X"
+
+[connections.snowpark]
+user = "<jdoe>"
+password = "<my_trial_pass>"
+warehouse = "COMPUTE_WH"
+role = "ACCOUNTADMIN"
+account = "<account-id>"
 ```
 
-To indicate how long each step will take, set the `Duration` under the step title (i.e. `##`) to an integer. The integers refer to minutes. If you set `Duration: 4` then a particular step will take 4 minutes to complete. 
-
-The total sfguide completion time is calculated automatically for you and will be displayed on the landing page. 
-
 <!-- ------------------------ -->
-## Code Snippets, Info Boxes, and Tables
-Duration: 2
-
-Look at the [markdown source for this sfguide](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/_template/markdown.template) to see how to use markdown to generate code snippets, info boxes, and download buttons. 
-
-### JavaScript
-```javascript
-{ 
-  key1: "string", 
-  key2: integer,
-  key3: "string"
-}
-```
-
-### Java
-```java
-for (statement 1; statement 2; statement 3) {
-  // code block to be executed
-}
-```
-
-### Info Boxes
-
-> aside positive
-> 
-> This will appear in a positive info box.
-
-
-
-> aside negative
-> 
-> This will appear in a negative info box.
-
-### Buttons
-
-<button>[Youtube - Halsey Playlists](https://www.youtube.com/user/iamhalsey/playlists)</button>
-
-### Tables
-<table>
-    <thead>
-        <tr>
-            <th colspan="2"> **The table header** </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>The table body</td>
-            <td>with two columns</td>
-        </tr>
-    </tbody>
-</table>
-
-### Hyperlinking
-[Youtube - Halsey Playlists](https://www.youtube.com/user/iamhalsey/playlists)
-
-<!-- ------------------------ -->
-## Images, Videos, and Surveys, and iFrames
-Duration: 2
-
-Look at the [markdown source for this guide](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/_template/markdown.template) to see how to use markdown to generate these elements. 
-
-### Images
-![Puppy](assets/puppy.jpg)
-
-### Videos
-Videos from youtube can be directly embedded:
-<video id="KmeiFXrZucE"></video>
-
-### Inline Surveys
-<form>
-  <name>How do you rate yourself as a user of Snowflake?</name>
-  <input type="radio" value="Beginner">
-  <input type="radio" value="Intermediate">
-  <input type="radio" value="Advanced">
-</form>
-
-### Embed an iframe
-![https://codepen.io/MarioD/embed/Prgeja](https://en.wikipedia.org/wiki/File:Example.jpg "Try Me Publisher")
-
-<!-- ------------------------ -->
-## Importing markdown files
-Duration: 1
-<<_imports/sample_import.md>>
-
-
-<!-- ------------------------ -->
-## Conclusion & Next Steps
+## Build a simple chatbot application
 Duration: 1
 
-The Conclusion and Next Steps section is one of the most important parts of a guide. This last section helps to sum up all the information the reader has gone through, and in many ways should read like a [TLDR summary](https://www.howtogeek.com/435266/what-does-tldr-mean-and-how-do-you-use-it/#post-435266:~:text=How%20Do%20You%20Use%20TLDR%3F,you%E2%80%99re%20the%20author%20or%20commenter.%20Using). 
+<!-- ------------------------ -->
+## Add prompt engineering and SQL extraction
+Duration: 1
 
-There are three main sub-headers in a Conclusion step:
+<!-- ------------------------ -->
+## Explore the data via natural language
+Duration: 1
 
-1. a general conclusion paragraph (what you are reading now!)
-2. "What We've Covered" section with a bulleted list of things
-3. "Related Resources" with links to various other resources, other guides, docs, videos, GitHub source code, etc.
+// *TODO: Add sample questions*
 
-It's also important to remember that by the time a reader has completed a Guide, the goal is that they have actually built something! Guides teach through hands-on examples -- not just explaining concepts.
+<!-- ------------------------ -->
+## Tips, Tricks and next steps
+Duration: 1
 
-### What We've Covered
-- creating steps and setting duration
-- adding code snippets
-- embedding images, videos, and surveys
-- importing other markdown files
-
-### Related Resources
-- [SFGuides on GitHub](https://github.com/Snowflake-Labs/sfguides)
-- [Learn the GitHub Flow](https://guides.github.com/introduction/flow/)
-- [Learn How to Fork a project on GitHub](https://guides.github.com/activities/forking/)
+<!-- ------------------------ -->
+## Conclusion and resources
+Duration: 1
