@@ -7,7 +7,7 @@ feedback link: https://github.com/Snowflake-Labs/sfguides/issues
 tags: Getting Started, Data Science, Data Engineering, Twitter 
 authors: Snowflake
 
-# Snowflake Guide Template
+# Frosty: Build a LLM Chatbot in Streamlit on your Snowflake Data
 <!-- ------------------------ -->
 ## Overview 
 Duration: 1
