@@ -13,7 +13,6 @@ if "messages" not in st.session_state.keys():
 conn = st.experimental_connection("snowpark")
 
 def get_response(prompt):    
-    st.session_state.messages.append({"role": "user", "content": prompt})
     # prompt engineering LLM to generate sql code
     st.session_state.messages.append(
         {
@@ -34,12 +33,10 @@ def get_response(prompt):
         message["sql"] = sql
         # Execute the sql code
         message["results"] = conn.query(sql)
+    st.session_state.messages.append({"role": "user", "content": prompt})
     st.session_state.messages.append(message)
 
-# user, assistant = st.chat_layout()
-# prompt = st.chat_input()
-prompt = st.text_input("Prompt:")
-user, assistant = st.tabs(["User", "Assistant"])
+prompt = st.chat_input()
 if prompt:
     get_response(prompt)
     
@@ -48,8 +45,9 @@ for message in st.session_state.messages:
     if "hide" in message:
         continue
     if message["role"] == "user":
-        user.write(message["content"])
+        st.chat_message("user", background=True).write(message["content"])
     else:
+        assistant = st.chat_message("assistant")
         if "sql" in message:
             assistant.code(message["sql"], language="sql")
         if "results" in message:
