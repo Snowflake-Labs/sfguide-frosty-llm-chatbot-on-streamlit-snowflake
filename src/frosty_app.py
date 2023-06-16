@@ -1,10 +1,11 @@
 import streamlit as st
 import re
-from . import prompts
-from .utils import llm_chat
+import prompts
+from utils import llm_chat, get_table_context
 
-# TODO: Update this app to actually run successfully, verify it with basic prompts
 st.title("Frosty")
+
+_QUALIFIED_TABLE_NAME = "FROSTY_SAMPLE.CYBERSYN_SEC.SEC_REPORT_TEXT_LINKED"
 
 # Initialize the chat messages history
 if "messages" not in st.session_state.keys():
@@ -16,24 +17,29 @@ def get_response(prompt):
     # prompt engineering LLM to generate sql code
     st.session_state.messages.append(
         {
-            "role": "user",
+            "role": "system",
             "hide": True,
             "content": prompts.GEN_SQL.format(
                 user_prompt=prompt,
+                context=get_table_context(_QUALIFIED_TABLE_NAME),
             ),
         }
     )
     # Call LLM
     response = llm_chat(st.session_state.messages)
-    sql = re.search(r"<sql>(.*)</sql>", response, re.DOTALL).group(1)
-    # Execute the sql code
-    results = conn.query(sql)
-    st.session_state.messages.append(
-        {"role": "assistant", "content": response, "sql": sql, "results": results}
-    )
+    message = {"role": "assistant", "content": response}
+    sql_match = re.search(r"<sql>(.*)</sql>", response, re.DOTALL)
+    if sql_match:
+        sql = sql_match.group(1)
+        message["sql"] = sql
+        # Execute the sql code
+        message["results"] = conn.query(sql)
+    st.session_state.messages.append(message)
 
-user, assistant = st.chat_layout()
-prompt = st.chat_input()
+# user, assistant = st.chat_layout()
+# prompt = st.chat_input()
+prompt = st.text_input("Prompt:")
+user, assistant = st.tabs(["User", "Assistant"])
 if prompt:
     get_response(prompt)
     
