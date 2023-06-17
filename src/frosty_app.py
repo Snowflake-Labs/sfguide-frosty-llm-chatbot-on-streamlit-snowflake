@@ -20,13 +20,11 @@ prompt = st.chat_input()
 def render_message(message):
     if "hide" in message:
         return
-    if message["role"] == "user":
-        st.chat_message("user", background=True).write(message["content"])
-    else:
-        with st.chat_message("assistant"):
-            st.write(message["content"])
-            if "results" in message:
-                st.dataframe(message["results"])
+    role = message["role"]
+    with st.chat_message(role, background=(role == "user")):
+        st.write(message["content"])
+        if "results" in message:
+            st.dataframe(message["results"])
 
 # display the chat messages   
 for message in st.session_state.messages:
