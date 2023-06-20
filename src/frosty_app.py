@@ -1,57 +1,53 @@
-import streamlit as st
+import openai
 import re
-import prompts
-from utils import llm_chat, get_table_context
+import streamlit as st
+from prompts import get_system_prompt
 
-st.title("Frosty")
-
-_QUALIFIED_TABLE_NAME = "FROSTY_SAMPLE.CYBERSYN_SEC.SEC_REPORT_TEXT_LINKED"
+st.title("☃️ Frosty")
 
 # Initialize the chat messages history
-if "messages" not in st.session_state.keys():
-    st.session_state.messages = [{"role": "assistant", "content": "How can I help?"}]
-conn = st.experimental_connection("snowpark")
+if "messages" not in st.session_state:
+    st.session_state.messages = [
+        {"role": "system", "content": get_system_prompt()},
+        {"role": "assistant", "content": "How can I help?"}
+    ]
 
-def get_response(prompt):    
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    # prompt engineering LLM to generate sql code
-    st.session_state.messages.append(
-        {
-            "role": "system",
-            "hide": True,
-            "content": prompts.GEN_SQL.format(
-                user_prompt=prompt,
-                context=get_table_context(_QUALIFIED_TABLE_NAME),
-            ),
-        }
-    )
-    # Call LLM
-    response = llm_chat(st.session_state.messages)
-    message = {"role": "assistant", "content": response}
-    sql_match = re.search(r"<sql>(.*)</sql>", response, re.DOTALL)
-    if sql_match:
-        sql = sql_match.group(1)
-        message["sql"] = sql
-        # Execute the sql code
-        message["results"] = conn.query(sql)
-    st.session_state.messages.append(message)
+# This is a hack to fix the spinner shadow issue
+# Hopefully removed before we ship
+for _ in range(10):
+    st.empty()
 
-# user, assistant = st.chat_layout()
-# prompt = st.chat_input()
-prompt = st.text_input("Prompt:")
-user, assistant = st.tabs(["User", "Assistant"])
-if prompt:
-    get_response(prompt)
-    
-# display the chat messages   
+# display the prior chat messages
 for message in st.session_state.messages:
-    if "hide" in message:
+    if message["role"] == "system":
         continue
-    if message["role"] == "user":
-        user.write(message["content"])
-    else:
-        if "sql" in message:
-            assistant.code(message["sql"], language="sql")
+    with st.chat_message(message["role"]):
+        st.write(message["content"])
         if "results" in message:
-            assistant.dataframe(message["results"])
-        assistant.write(message["content"])
+            st.dataframe(message["results"])
+
+# Prompt for user input and process / save
+if prompt := st.chat_input():
+    st.chat_message("user").write(prompt)
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    # Call LLM
+    with st.chat_message("assistant"):
+        response = ""
+        resp_container = st.empty()
+        for delta in openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
+            stream=True,
+        ):
+            response += delta.choices[0].delta.get("content", "")
+            resp_container.markdown(response)
+
+        message = {"role": "assistant", "content": response}
+        # Parse the response for a SQL query and execute if available
+        sql_match = re.search(r"```sql\n(.*)\n```", response, re.DOTALL)
+        if sql_match:
+            sql = sql_match.group(1)
+            conn = st.experimental_connection("snowpark")
+            message["results"] = conn.query(sql)
+            st.dataframe(message["results"])
+        st.session_state.messages.append(message)

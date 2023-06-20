@@ -1,3 +1,3 @@
 snowflake-snowpark-python[pandas]==1.5.0
-streamlit==1.23.1
+https://github.com/LukasMasuch/st-playground/releases/download/chat-component-0.0.8/streamlit-1.23.78-py2.py3-none-any.whl
 openai==0.27.8
