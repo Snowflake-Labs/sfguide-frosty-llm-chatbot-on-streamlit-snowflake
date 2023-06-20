@@ -35,8 +35,9 @@ OpenAI is the AI research and deployment company behind ChatGPT, GPT-4 (and its 
 ### What You’ll Learn
 
 * How to create a web application from a Python script with Streamlit
-* How to use `st.experimental_connection` to connect your Streamlit app to Snowflake
-* How to 
+* How to use [`st.experimental_connection`](https://docs.streamlit.io/library/api-reference/connections/st.experimental_connection) to connect your Streamlit app to Snowflake
+* How to use `st.chat` to create a chatbot with just a few lines of code
+* How to use [`session state`](https://docs.streamlit.io/library/api-reference/session-state) to store your chatbot's message history
 
 <!-- ### What You’ll Need 
 - A [GitHub](https://github.com/) Account 
@@ -53,7 +54,7 @@ OpenAI is the AI research and deployment company behind ChatGPT, GPT-4 (and its 
 * Ability to install and run software on your computer
 * [VSCode](https://code.visualstudio.com/download) installed
 
-### What You’ll Build 
+### What You’ll Build
 
 <!-- ------------------------ -->
 ## Prepare your environment
@@ -133,7 +134,7 @@ Duration: 8
 ![alt_text](assets/Streamlit_Hello.png)
 
 ### Configure secrets file
-Since our application will connect to Snowflake and OpenAI, we need a way to securely store our credentials. Luckily, Streamlit's secrets feature allows us to store secrets securely and access them in our Streamlit app as environment variables.
+Since our application will connect to Snowflake and OpenAI, we need a way to securely store our credentials. Luckily, [Streamlit's secrets management feature](https://docs.streamlit.io/streamlit-community-cloud/get-started/deploy-an-app/connect-to-data-sources/secrets-management) allows us to store secrets securely and access them in our Streamlit app as environment variables.
 
 1. Add a folder within your `llm-chatbot` folder called `.streamlit`. Using the command line, you can do this by entering `mkdir .streamlit`.
 2. Within the `.streamlit` folder, add a file called `secrets.toml`. Using the command line, you can do this by first navigating to the `.streamlit` folder via `cd .streamlit` and then entering `touch secrets.toml.`
