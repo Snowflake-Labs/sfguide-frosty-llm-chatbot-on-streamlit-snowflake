@@ -5,52 +5,48 @@ from prompts import get_system_prompt
 
 st.title("☃️ Frosty")
 
-system_prompt = get_system_prompt()
-
 # Initialize the chat messages history
 if "messages" not in st.session_state.keys():
     st.session_state.messages = [
-        {"role": "system", "content": system_prompt, "hide": True},
+        {"role": "system", "content": get_system_prompt()},
         {"role": "assistant", "content": "How can I help?"}
     ]
 
-# Prompt for user input
-prompt = st.chat_input()
+# This is a hack to fix the spinner shadow issue
+# Hopefully removed before we ship
+for _ in range(10):
+    st.empty()
 
-def render_message(message):
-    if "hide" in message:
-        return
-    role = message["role"]
-    with st.chat_message(role, background=(role == "user")):
-        for _ in range(3):
-            st.empty() # This is a hack to fix the spinner shadow issue
+# display the prior chat messages
+for message in st.session_state.messages:
+    if message["role"] == "system":
+        continue
+    with st.chat_message(message["role"]):
         st.write(message["content"])
         if "results" in message:
             st.dataframe(message["results"])
 
-# display the chat messages   
-for message in st.session_state.messages:
-    render_message(message)
+# Prompt for user input
+prompt = st.chat_input()
 
 if prompt:
-    user_message = {"role": "user", "content": prompt}
-    render_message(user_message)
-    st.session_state.messages.append(user_message)
+    st.chat_message("user").write(prompt)
+    st.session_state.messages.append({"role": "user", "content": prompt})
     # Call LLM
     with st.chat_message("assistant"):
-        r = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            #engine="gpt-4",
-            messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
-        )
+        with st.spinner("Thinking..."):
+            r = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                #engine="gpt-4",
+                messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
+            )
         response = r.choices[0].message.content
         st.write(response)
         message = {"role": "assistant", "content": response}
 
-        # Parse the response for a SQL query
-        sql_match = re.search(r"```sql\n(.*)\n```", message["content"], re.DOTALL)
+        # Parse the response for a SQL query and execute if available
+        sql_match = re.search(r"```sql\n(.*)\n```", response, re.DOTALL)
         if sql_match:
-            # Execute and save the SQL query if available
             sql = sql_match.group(1)
             message["sql"] = sql
             conn = st.experimental_connection("snowpark")
