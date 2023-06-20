@@ -11,7 +11,7 @@ In this guide, we will build an LLM-powered chatbot named "Frosty" that performs
 Press the button above to get started with this guide in GitHub Codespaces. This may be especially useful if you are less comfortable with python environment setup (or don't feel like wrestling with it today). Notes and tips on using Codespaces with this guide:
 
 - Once you launch the codespace, dependencies should be installed automatically and the app should launch after a few seconds.
-- The app needs secrets to be added, you'll need to configure `.streamlit/secrets.toml` in Codespaces (or similar) before the app succeeds. An example file is provided to help you get started.
+- The app needs secrets to be added, you'll need to configure `.streamlit/secrets.toml` in Codespaces (or similar) before the app succeeds. An example file is provided to help you get started. The app will show an exception on launch until this is added.
 - Please ensure codespace use is appropriate for the planned data access and usage. Consider using [encrypted secrets](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-encrypted-secrets-for-your-codespaces) for any sensitive credentials.
 
 ## Step-By-Step Guide
