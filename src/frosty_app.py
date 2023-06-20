@@ -6,6 +6,7 @@ from prompts import get_system_prompt
 st.title("☃️ Frosty")
 
 # Initialize the chat messages history
+openai.api_key = st.secrets.OPENAI_API_KEY
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "system", "content": get_system_prompt()},
