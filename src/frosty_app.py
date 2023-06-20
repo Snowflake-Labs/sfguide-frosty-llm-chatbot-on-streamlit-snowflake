@@ -12,11 +12,6 @@ if "messages" not in st.session_state:
         {"role": "assistant", "content": "How can I help?"}
     ]
 
-# This is a hack to fix the spinner shadow issue
-# Hopefully removed before we ship
-for _ in range(10):
-    st.empty()
-
 # display the prior chat messages
 for message in st.session_state.messages:
     if message["role"] == "system":
