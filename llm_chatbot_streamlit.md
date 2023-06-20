@@ -183,10 +183,52 @@ account = "<account-id>"
 ### Validate credentials
 Let's validate that our Snowflake and OpenAI credentials are working as expected.
 
-1. Add a file called `frosty_app.py` at the root of your `llm-chatbot` folder.
-2. 
+#### OpenAI credentials
 
+First, we'll validate our OpenAI credentials by asking GPT 3.5 a simple question: what is Streamlit?
 
+1. Add a file called `validate_credentials.py` at the root of your `llm-chatbot` folder.
+2. Add the below code to `validate_credentials.py`. This snippet does the following:
+   * Imports the Streamlit and OpenAI Python packages
+   * Retrieves our OpenAI API key from the secrets file
+   * Sends GPT 3.5 the question "What is Streamlit?"
+   * Prints GPT 3.5's response to the UI using `st.write`
+
+```
+import streamlit as st
+import openai
+
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+
+completion = openai.ChatCompletion.create(
+  model="gpt-3.5-turbo",
+  messages=[
+    {"role": "user", "content": "What is Streamlit?"}
+  ]
+)
+
+st.write(completion.choices[0].message.content)
+```
+3. Run your Streamlit app by entering `run streamlit validate_credentials.py` in the command line.
+![alt_text](assets/Validate_OpenAI_Creds.png)
+
+#### Snowflake credentials
+
+Next, let's validate that our Snowflake credentials are working as expected.
+
+Replace the contents of `validate_credentials.py` with the below code. This snippet does the following:
+   * Imports the Streamlit package
+   * Creates a Snowpark connection
+   * Executes a query to pull the current warehouse and writes the result to the UI
+
+```
+import streamlit as st
+
+conn = st.experimental_connection("snowpark")
+df = conn.query("select current_warehouse()")
+st.write(df)
+```
+![alt_text](assets/Validate_Snowflake_Creds.png)
 
 <!-- ------------------------ -->
 ## Build a simple chatbot application
