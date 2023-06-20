@@ -32,8 +32,7 @@ SELECT * FROM FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ATTRIBUTES_LIMIT
 
 -- Create the modified time series view
 CREATE VIEW IF NOT EXISTS FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ANNUAL_TIME_SERIES AS
-SELECT ent.name as entity_name, ent.entity_type, ent.specialization_group as entity_specialization,
-ent.city, ent.state_abbreviation,
+SELECT ent.name as entity_name, ent.city, ent.state_abbreviation,
 ts.variable_name, year(ts.date) as "YEAR", ts.value, ts.unit, att.definition
 FROM cybersyn_financial__economic_essentials.cybersyn.financial_institution_timeseries AS ts
 INNER JOIN FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ATTRIBUTES_LIMITED att ON (ts.variable = att.variable)
