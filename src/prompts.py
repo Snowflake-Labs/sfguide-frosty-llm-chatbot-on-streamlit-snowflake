@@ -84,5 +84,5 @@ def get_system_prompt():
 
 # do `streamlit run prompts.py` to view the initial system prompt in a Streamlit app
 if __name__ == "__main__":
-    st.title("System prompt for the LLM")
+    st.header("System prompt for Frosty")
     st.markdown(get_system_prompt())
