@@ -81,3 +81,8 @@ def get_system_prompt():
         metadata_query=METADATA_QUERY
     )
     return GEN_SQL.format(context=table_context)
+
+# do `streamlit run prompts.py` to view the initial system prompt in a Streamlit app
+if __name__ == "__main__":
+    st.title("System prompt for the LLM")
+    st.markdown(get_system_prompt())
