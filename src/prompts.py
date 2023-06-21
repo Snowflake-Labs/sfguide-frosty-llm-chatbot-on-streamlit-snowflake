@@ -33,7 +33,10 @@ Don't forget to use "ilike %keyword%" for fuzzy match queries and wrap the gener
 (select 1) union (select 2)
 ```
 
-Do you follow? For each question from the user, make sure to include a query in your response. Now let's begin! 
+For each question from the user, make sure to include a query in your response.
+
+Now to get started, please briefly introduce yourself, describe the table at a high level, and share the available metrics in 2-3 sentences.
+Then provide 3 example questions using bullet points.
 """
 
 

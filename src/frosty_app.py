@@ -8,12 +8,15 @@ st.title("☃️ Frosty")
 # Initialize the chat messages history
 openai.api_key = st.secrets.OPENAI_API_KEY
 if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {"role": "system", "content": get_system_prompt()},
-        {"role": "assistant", "content": "How can I help?"}
-    ]
+    # system prompt includes table information, rules, and prompts the LLM to produce
+    # a welcome message to the user.
+    st.session_state.messages = [{"role": "system", "content": get_system_prompt()}]
 
-# display the prior chat messages
+# Prompt for user input and save
+if prompt := st.chat_input():
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
+# display the existing chat messages
 for message in st.session_state.messages:
     if message["role"] == "system":
         continue
@@ -22,11 +25,8 @@ for message in st.session_state.messages:
         if "results" in message:
             st.dataframe(message["results"])
 
-# Prompt for user input and process / save
-if prompt := st.chat_input():
-    st.chat_message("user").write(prompt)
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    # Call LLM
+# If last message is not from assistant, we need to generate a new response
+if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
         response = ""
         resp_container = st.empty()
