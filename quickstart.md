@@ -113,7 +113,22 @@ You can also access Snowsight from the Classic Console:
 
 ![Example queries for the Cybersyn Financial & Economic Essentials dataset from the Snowflake Data Marketplace](assets/Cybersyn_Example_Queries.png)
 
-Now that we have the dataset we'll be using for our application, we can get started with Streamlit.
+### Prep Snowflake database
+Before building our app, we need to run a set of SQL statements in Snowflake to create two views. The first view is `FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ATTRIBUTES_LIMITED`, which includes:
+  * A subset of cybersyn_financial__economic_essentials.cybersyn.financial_institution_attributes:
+    * Totals for assets, real estate loans, securities, deposits; % of deposits insured; total employees
+  
+  The second view is `FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ANNUAL_TIME_SERIES`, which includes:
+  * A modified version of cybersyn_financial__economic_essentials.cybersyn.financial_institution_timeseries as follows:
+    * Entity and attribute metadata is joined directly
+      * Only the set of attributes from FINANCIAL_ENTITY_ATTRIBUTES_LIMITED are exposed
+      * Only the end of year metrics (YYYY-12-31) are included, and a YEAR column is provided instead of the date column
+
+You can copy the SQL statements from this file[TODO: add link here] and run them in the worksheet created for your sample queries.
+
+![GIF showing the SQL statements being run in Snowflake](assets/Run_Queries.gif)
+
+Now that we've configured the dataset we'll be using for our application, we can get started with Streamlit.
 
 ## Setting up Streamlit environment
 Duration: 8
@@ -343,21 +358,6 @@ if prompt:
 Duration: 10
 
 Now that we've built a simple version of the chatbot app, let's expand the functionality to enable Frosty to translate our requests into SQL statements and execute those statements using the Cybersyn dataset stored in our Snowflake database.
-
-### Prep Snowflake database
-Before building our app, we need to run a set of SQL statements in Snowflake to create two views. The first view is `FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ATTRIBUTES_LIMITED`, which includes:
-  * A subset of cybersyn_financial__economic_essentials.cybersyn.financial_institution_attributes:
-    * Totals for assets, real estate loans, securities, deposits; % of deposits insured; total employees
-  
-  The second view is `FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ANNUAL_TIME_SERIES`, which includes:
-  * A modified version of cybersyn_financial__economic_essentials.cybersyn.financial_institution_timeseries as follows:
-    * Entity and attribute metadata is joined directly
-      * Only the set of attributes from FINANCIAL_ENTITY_ATTRIBUTES_LIMITED are exposed
-      * Only the end of year metrics (YYYY-12-31) are included, and a YEAR column is provided instead of the date column
-
-You can copy the SQL statements from this file[TODO: add link here] and run them in the worksheet created for your sample queries earlier in this guide.
-
-![GIF showing the SQL statements being run in Snowflake](assets/Run_Queries.gif)
 
 ### Create a helper file
 We're also going to create a helper Python file before building out the main file of our chatbot app. The primary purpose of this file is to create the function `get_system_prompt()`, which will be called in our main Python file and will do a few things:
