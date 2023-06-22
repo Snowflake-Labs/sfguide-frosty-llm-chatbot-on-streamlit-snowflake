@@ -113,7 +113,7 @@ You can also access Snowsight from the Classic Console:
 
 ![Example queries for the Cybersyn Financial & Economic Essentials dataset from the Snowflake Data Marketplace](assets/Cybersyn_Example_Queries.png)
 
-### Prep Snowflake database
+### Prep database
 Before building our app, we need to run a set of SQL statements in Snowflake to create two views. The first view is `FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ATTRIBUTES_LIMITED`, which includes:
   * A subset of cybersyn_financial__economic_essentials.cybersyn.financial_institution_attributes:
     * Totals for assets, real estate loans, securities, deposits; % of deposits insured; total employees
@@ -176,8 +176,8 @@ OPENAI_API_KEY = "sk-2v...X"
 OPENAI_API_KEY = "sk-2v...X"
 
 [connections.snowpark]
-user = "<jdoe>"
-password = "<my_trial_pass>"
+user = "<username>"
+password = "<password>"
 warehouse = "COMPUTE_WH"
 role = "ACCOUNTADMIN"
 account = "<account-id>"
