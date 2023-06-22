@@ -110,12 +110,8 @@ You can also access Snowsight from the Classic Console:
 ![The Cybersyn Financial & Economic Essentials dataset listing in the Snowflake Data Marketplace](assets/Cybersyn_Search_Marketplace.png)
 
 4. Select **"Get."**
-![The "Get" button for the Cybersyn Financial & Economic Essentials dataset from the Snowflake Data Marketplace](assets/Cybersyn_Marketplace_Get.png) -->
-
 5. Select the appropriate roles to access the database being created and accept the Snowflake consumer terms and Cybersyn's terms of use.
 6. Select **"Query Data,"** which will open a worksheet with example queries.
-
-![The "Query data" button for the Cybersyn Financial & Economic Essentials dataset from the Snowflake Data Marketplace](assets/Cybersyn_Query_Data.png) -->
 
 ![Example queries for the Cybersyn Financial & Economic Essentials dataset from the Snowflake Data Marketplace](assets/Cybersyn_Example_Queries.png)
 
