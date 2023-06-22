@@ -364,7 +364,7 @@ Before building our app, we need to run a set of SQL statements in Snowflake to 
 
 You can copy the SQL statements from this file[TODO: add link here] and run them in the worksheet created for your sample queries earlier in this guide.
 
-[TODO: add image here]
+![GIF showing the SQL statements being run in Snowflake](assets/Run_Queries.gif)
 
 ### Create a helper file
 We're also going to create a helper Python file before building out the main file of our chatbot app. The primary purpose of this file is to create the function `get_system_prompt()`, which will be called in our main Python file and will do a few things:
