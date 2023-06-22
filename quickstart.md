@@ -35,7 +35,7 @@ OpenAI is the AI research and deployment company behind ChatGPT, GPT-4 (and its 
 ### What you’ll learn
 * How to create a web application from a Python script with Streamlit
 * How to use [`st.experimental_connection`](https://docs.streamlit.io/library/api-reference/connections/st.experimental_connection) to connect your Streamlit app to Snowflake
-* How to build a chatbot in just a few lines of code using `st.chat`
+* How to build a chatbot in just a few lines of code using Streamlit's new chat UI
 * How to use [`session state`](https://docs.streamlit.io/library/api-reference/session-state) to store your chatbot's message history
 
 ### Prerequisites
@@ -625,7 +625,7 @@ Congratulations – you've just build an LLM-powered chatbot capable of translat
 
 Want to learn more about the tools and technologies used by your app? Check out the following resources:
 
-* [st.chat_input]() TODO: Add link here once docs are live
+* [Streamlit's new chat UI]() TODO: Add link here once docs are live
 * [st.experimental_connection](https://docs.streamlit.io/library/api-reference/connections/st.experimental_connection)
 * [Session state](https://docs.streamlit.io/library/api-reference/session-state)
 * [Secrets management](https://docs.streamlit.io/streamlit-community-cloud/get-started/deploy-an-app/connect-to-data-sources/secrets-management)
