@@ -259,7 +259,15 @@ if "messages" not in st.session_state.keys():
     ]
 ```
 
-3. Display the chatbot's message history by iterating through the values stored in session state associated with the key "messages" and printing each value.
+3. Prompt the user to enter chat input by using Streamlit's `st.chat_input()` feature. If the user has entered a message, add that message to the chat history by storing it in session state.
+
+```python
+# Prompt for user input and save
+if prompt := st.chat_input():
+    st.session_state.messages.append({"role": "user", "content": prompt})
+```
+
+4. Display the chatbot's message history by iterating through the values stored in session state associated with the key "messages" and printing each value.
 
 ```python
 # display the prior chat messages
@@ -270,23 +278,11 @@ for message in st.session_state.messages:
         st.write(message["content"])
 ```
 
-4. Prompt the user to enter chat input by using Streamlit's `st.chat_input()` feature. If the user has entered a message, write the message to the UI using `st.chat_message()` and add that message to the chat history by appending it to session state.
+4. If the last message is not from the assistant, send the message to GPT-3.5 via the `openai` Python package. Display a spinner while the app is retrieving GPT-3.5's response via Streamlit's [`st.spinner`](https://docs.streamlit.io/library/api-reference/status/st.spinner) feature and use `st.write` to display the chatbot's response in the UI. Append the chatbot's response to the chat history stored in session state.
 
 ```python
-# Prompt for user input
-prompt = st.chat_input()
-
-if prompt:
-    st.chat_message("user").write(prompt)
-    st.session_state.messages.append({"role": "user", "content": prompt})
-```
-
-5. Finally, send the user's message to GPT-3.5 via the `openai` Python package. Display a spinner while the app is retrieving GPT-3.5's response via Streamlit's [`st.spinner`](https://docs.streamlit.io/library/api-reference/status/st.spinner) feature and use `st.write` to display the chatbot's response in the UI. Append the chatbot's response to the chat history stored in session state.
-
-```python
-if prompt:
-    st.chat_message("user").write(prompt)
-    st.session_state.messages.append({"role": "user", "content": prompt})
+# If last message is not from assistant, we need to generate a new response
+if st.session_state.messages[-1]["role"] != "assistant":
     # Call LLM
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
@@ -297,8 +293,8 @@ if prompt:
             response = r.choices[0].message.content
             st.write(response)
 
-        message = {"role": "assistant", "content": response}
-        st.session_state.messages.append(message)
+    message = {"role": "assistant", "content": response}
+    st.session_state.messages.append(message)
 ```
 6. Run the Streamlit app via `streamlit run simple_chatbot.py`. Give it a whirl – ask Frosty a question!
 
@@ -318,19 +314,19 @@ if "messages" not in st.session_state.keys():
         {"role": "assistant", "content": "How can I help?"}
     ]
 
-# display the prior chat messages
+# Prompt for user input and save
+if prompt := st.chat_input():
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
+# display the existing chat messages
 for message in st.session_state.messages:
     if message["role"] == "system":
         continue
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-# Prompt for user input
-prompt = st.chat_input()
-
-if prompt:
-    st.chat_message("user").write(prompt)
-    st.session_state.messages.append({"role": "user", "content": prompt})
+# If last message is not from assistant, we need to generate a new response
+if st.session_state.messages[-1]["role"] != "assistant":
     # Call LLM
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
@@ -341,8 +337,8 @@ if prompt:
             response = r.choices[0].message.content
             st.write(response)
 
-        message = {"role": "assistant", "content": response}
-        st.session_state.messages.append(message)
+    message = {"role": "assistant", "content": response}
+    st.session_state.messages.append(message)
 ```
 
 <!-- ------------------------ -->
