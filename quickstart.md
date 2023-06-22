@@ -7,7 +7,7 @@ feedback link: https://github.com/Snowflake-Labs/sfguides/issues
 tags: Snowpark Python, Streamlit, OpenAI, LLMs
 authors: Joshua Carroll, Richard Meng, Caroline Frasca
 
-# Frosty: Build a LLM Chatbot in Streamlit on your Snowflake Data
+# Frosty: Build an LLM Chatbot in Streamlit on your Snowflake Data
 <!-- ------------------------ -->
 ## Overview 
 Duration: 2
