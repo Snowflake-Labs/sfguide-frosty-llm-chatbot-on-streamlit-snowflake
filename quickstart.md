@@ -26,7 +26,7 @@ The application uses Streamlit and Snowflake and can be plugged into your LLM of
 ### What is Streamlit?
 Streamlit is an open-source Python library that enables developers to quickly create, deploy, and share web apps from Python scripts. Learn more about [Streamlit](https://streamlit.io/).
 
-### What is a Large Language Model (LLM)?
+### What is a large language model (LLM)?
 A large language model, or LLM, is a deep learning algorithm that can recognize, summarize, translate, predict and generate text and other content based on knowledge gained from massive datasets. Some examples of popular LLMs are [GPT-4](https://openai.com/research/gpt-4), [GPT-3](https://openai.com/blog/gpt-3-apps), [BERT](https://cloud.google.com/ai-platform/training/docs/algorithms/bert-start), [LLaMA](https://ai.facebook.com/blog/large-language-model-llama-meta-ai/), and [LaMDA](https://blog.google/technology/ai/lamda/).
 
 ### What is OpenAI?
@@ -84,7 +84,7 @@ Duration: 8
 - Do not reinstall a different version of `pyarrow` after installing Snowpark.
 
 <!-- ------------------------ -->
-## Accessing Data on Snowflake Marketplace
+## Accessing data on Snowflake Marketplace
 
 Duration: 4
 
