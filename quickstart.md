@@ -136,6 +136,8 @@ Since our application will connect to Snowflake and OpenAI, we need a way to sec
 #### Add Snowflake credentials to `secrets.toml`
 We need to add the Snowflake `user`, `password`, `warehouse`, `role`, and `account` to our secrets file. Copy the following format, replacing the placeholder credentials with your actual credentials.
 
+If you prefer to use browser-based SSO to authenticate, replace `password = "<my_trial_pass>"` with `authenticator=EXTERNALBROWSER`.
+
 ```toml
 # .streamlit/secrets.toml
 
