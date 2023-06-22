@@ -62,7 +62,7 @@ Duration: 8
     ```
     conda create --name py310_env --override-channels -c https://repo.anaconda.com/pkgs/snowflake python=3.10 numpy pandas
     ```
-    Activate the environment created in those instructions by running `conda activate py38_env` and proceed to step 6 below.
+    Activate the environment created in those instructions by running `conda activate py310_env` and proceed to step 6 below.
 
     If you're not using a machine with an Apple M1 chip, continue to step 4.
 
