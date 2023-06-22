@@ -13,6 +13,8 @@ authors: Joshua Carroll, Richard Meng, Caroline Frasca
 Duration: 2
 
 ![Preview of final app](assets/App_Demo.gif)
+<img src="assets/App_Demo.gif" alt="your_alternative_text" width="your_width" height="your_height" loop=infinite>
+
 
 In this guide, we will build an LLM-powered chatbot named "Frosty" that performs data exploration and answers questions by writing and executing SQL queries on Snowflake data.
 
