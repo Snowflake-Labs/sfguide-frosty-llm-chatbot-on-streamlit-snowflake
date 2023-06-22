@@ -496,7 +496,7 @@ for message in st.session_state.messages:
             st.dataframe(message["results"])
 ```
 
-4. Check the last entry in the chat history to see if it was sent by the user or the chatbot. If it was sent by the user, use GPT-3.5 to generate a response. Instead of displaying the entire response at once, use OpenAI's `stream` parameter to signify that GPT-3.5's response should be sent incrementally in chunks via an event stream, and display the chunks as they're received.
+2. Check the last entry in the chat history to see if it was sent by the user or the chatbot. If it was sent by the user, use GPT-3.5 to generate a response. Instead of displaying the entire response at once, use OpenAI's `stream` parameter to signify that GPT-3.5's response should be sent incrementally in chunks via an event stream, and display the chunks as they're received.
 
 ```python
 # If last message is not from assistant, we need to generate a new response
@@ -513,7 +513,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
             resp_container.markdown(response)
 ```
 
-5. Use a regular expression to search the newly generated response for the SQL markdown syntax that we instructed GPT-3.5 to wrap any SQL queries in. If a match is found, use `st.experimental_connection` to execute the SQL query against the database we created in Snowflake. Write the result to the app using `st.dataframe`, and append the result to the associated message in the message history.
+3. Use a regular expression to search the newly generated response for the SQL markdown syntax that we instructed GPT-3.5 to wrap any SQL queries in. If a match is found, use `st.experimental_connection` to execute the SQL query against the database we created in Snowflake. Write the result to the app using `st.dataframe`, and append the result to the associated message in the message history.
 
 ```python
         message = {"role": "assistant", "content": response}
@@ -527,7 +527,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
         st.session_state.messages.append(message)
 ```
 
-6. Run the Streamlit app via `streamlit run frosty_app.py`.
+4. Run the Streamlit app via `streamlit run frosty_app.py`.
 
 ![Preview of final app](assets/App_Demo.gif)
 
