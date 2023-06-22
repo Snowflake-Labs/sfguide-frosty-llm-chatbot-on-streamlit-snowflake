@@ -7,7 +7,7 @@ feedback link: https://github.com/Snowflake-Labs/sfguides/issues
 tags: Snowpark Python, Streamlit, OpenAI, LLMs
 authors: Joshua Carroll, Richard Meng, Caroline Frasca
 
-# Frosty: Build an LLM Chatbot in Streamlit on your Snowflake Data
+# Frosty: Build a LLM Chatbot in Streamlit on your Snowflake Data
 <!-- ------------------------ -->
 ## Overview 
 Duration: 2
@@ -46,6 +46,12 @@ OpenAI is the AI research and deployment company behind ChatGPT, GPT-4 (and its 
 * Ability to install and run software on your computer
 * [VSCode](https://code.visualstudio.com/download) or the IDE of your choice installed
 
+### What you’ll learn
+* How to create a web application from a Python script with Streamlit
+* How to use [`st.experimental_connection`](https://docs.streamlit.io/library/api-reference/connections/st.experimental_connection) to connect your Streamlit app to Snowflake
+* How to build a chatbot in just a few lines of code using Streamlit's new chat UI
+* How to use [`session state`](https://docs.streamlit.io/library/api-reference/session-state) to store your chatbot's message history
+
 <!-- ------------------------ -->
 ## Prepare your environment
 Duration: 8
@@ -73,11 +79,7 @@ Duration: 8
     conda install -c https://repo.anaconda.com/pkgs/snowflake snowflake-snowpark-python openai streamlit
     ```
 
----
-
 ### Troubleshooting `pyarrow` related issues
-
-- If you have `pyarrow` already installed, uninstall it before installing Snowpark.
 - If you do not have `pyarrow` installed, you do not need to install it yourself; installing Snowpark automatically installs the appropriate version.
 - Do not reinstall a different version of `pyarrow` after installing Snowpark.
 
@@ -108,12 +110,12 @@ You can also access Snowsight from the Classic Console:
 ![The Cybersyn Financial & Economic Essentials dataset listing in the Snowflake Data Marketplace](assets/Cybersyn_Search_Marketplace.png)
 
 4. Select **"Get."**
-<!-- ![The "Get" button for the Cybersyn Financial & Economic Essentials dataset from the Snowflake Data Marketplace](assets/Cybersyn_Marketplace_Get.png) -->
+![The "Get" button for the Cybersyn Financial & Economic Essentials dataset from the Snowflake Data Marketplace](assets/Cybersyn_Marketplace_Get.png) -->
 
 5. Select the appropriate roles to access the database being created and accept the Snowflake consumer terms and Cybersyn's terms of use.
 6. Select **"Query Data,"** which will open a worksheet with example queries.
 
-<!-- ![The "Query data" button for the Cybersyn Financial & Economic Essentials dataset from the Snowflake Data Marketplace](assets/Cybersyn_Query_Data.png) -->
+![The "Query data" button for the Cybersyn Financial & Economic Essentials dataset from the Snowflake Data Marketplace](assets/Cybersyn_Query_Data.png) -->
 
 ![Example queries for the Cybersyn Financial & Economic Essentials dataset from the Snowflake Data Marketplace](assets/Cybersyn_Example_Queries.png)
 
@@ -158,12 +160,7 @@ We also need to add our OpenAI API key to our secrets file. Copy the following f
 OPENAI_API_KEY = "sk-2v...X"
 ```
 
-<!-- - Do a streamlit hello / hello world app
-- Add snowflake creds to secrets and confirm query access to the table from the last section to st.dataframe
-- Add openai key to secrets and confirm openai access is working (simple completion) -->
-
 #### Full contents of secrets.toml
-
 ```toml
 # .streamlit/secrets.toml
 
