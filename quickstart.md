@@ -513,7 +513,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
             resp_container.markdown(response)
 ```
 
-5. Use a regular expression to search the newly generated response for the SQL markdown syntax that we instructed GPT-3.5 to wrap any SQL queries in. If a match is found, use `st.experimental_connection` to execute the SQL query against the databse we created in Snowflake. Write the result to the app using `st.dataframe`, and append the result to the associated message in the message history.
+5. Use a regular expression to search the newly generated response for the SQL markdown syntax that we instructed GPT-3.5 to wrap any SQL queries in. If a match is found, use `st.experimental_connection` to execute the SQL query against the database we created in Snowflake. Write the result to the app using `st.dataframe`, and append the result to the associated message in the message history.
 
 ```python
         message = {"role": "assistant", "content": response}
