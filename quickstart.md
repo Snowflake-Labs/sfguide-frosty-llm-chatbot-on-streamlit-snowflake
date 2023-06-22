@@ -19,7 +19,7 @@ In this guide, we will build an LLM-powered chatbot named "Frosty" that performs
 The application uses Streamlit and Snowflake and can be plugged into your LLM of choice, alongside data from Snowflake Marketplace. By the end of the session, you will have an interactive web application chatbot which can converse and answer questions based on a financial dataset.
 
 ### Key features & technology
-* Large Language Models (LLMs)
+* Large language models (LLMs)
 * Streamlit
 * Snowflake Marketplace
 
