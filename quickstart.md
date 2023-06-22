@@ -92,6 +92,8 @@ Snowflake Marketplace provides visibility to a wide variety of datasets from thi
 
 ### Log into Snowsight
 
+If you don't have a Snowflake account, sign up for a 30-day free trial [here](https://signup.snowflake.com/).
+
 1. In a supported web browser, navigate to [https://app.snowflake.com](https://app.snowflake.com).
 2. Provide your account name or account URL. If you’ve previously signed in to Snowsight, you might see an account name that you can select.
 3. Sign in using your Snowflake account credentials.
