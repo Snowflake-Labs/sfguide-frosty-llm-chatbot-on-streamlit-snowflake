@@ -463,7 +463,7 @@ We'll break down the Python file snippet-by-snippet so that you understand the f
    * Retrieves our OpenAI API key from the secrets file
    * Initializes the message history using session state
       * This time, the first assistant message from the chatbot will display information about the current table in the database this app is using. `get_system_prompt()` retrieves this information.
-   * Prompts the user to enter a message and upon receiving a message, ads that message to the chat history
+   * Prompts the user to enter a message and upon receiving a message, adds that message to the chat history
    * Iterates through the message history and displays each message in the app
 
 ```python
