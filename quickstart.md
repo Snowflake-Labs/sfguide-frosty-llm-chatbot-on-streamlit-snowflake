@@ -1,5 +1,5 @@
 summary: This guide provides the instructions for writing an LLM chatbot in Streamlit on your Snowflake data.
-id: llm_chatbot_streamlit
+id: frosty_llm_chatbot_on_streamlit_snowflake
 categories: data-science-&-ml,app-development
 environments: web
 status: Hidden 
