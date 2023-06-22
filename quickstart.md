@@ -188,14 +188,14 @@ Let's validate that our Snowflake and OpenAI credentials are working as expected
 
 #### OpenAI credentials
 
-First, we'll validate our OpenAI credentials by asking GPT 3.5 a simple question: what is Streamlit?
+First, we'll validate our OpenAI credentials by asking GPT-3.5 a simple question: what is Streamlit?
 
 1. Add a file called `validate_credentials.py` at the root of your `llm-chatbot` folder.
 2. Add the below code to `validate_credentials.py`. This snippet does the following:
    * Imports the Streamlit and OpenAI Python packages
    * Retrieves our OpenAI API key from the secrets file
-   * Sends GPT 3.5 the question "What is Streamlit?"
-   * Prints GPT 3.5's response to the UI using `st.write`
+   * Sends GPT-3.5 the question "What is Streamlit?"
+   * Prints GPT-3.5's response to the UI using `st.write`
 
 ```python
 import streamlit as st
