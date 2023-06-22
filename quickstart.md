@@ -244,9 +244,7 @@ We'll break down the Python file snippet-by-snippet so that you understand the f
 1. Create a file called `simple_chatbot.py`. Add import statements and give your app a title.
 ```python
 import openai
-import re
 import streamlit as st
-from prompts import get_system_prompt
 
 st.title("☃️ Frosty")
 ```
