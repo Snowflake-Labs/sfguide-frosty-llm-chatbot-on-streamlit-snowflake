@@ -365,7 +365,7 @@ We're also going to create a helper Python file before building out the main fil
     * Use "ilike %keyword%" for fuzzy match queries.
     * Start the conversation by briefly introducing yourself, describing the table, sharing available metrics in a few sentences, and providing three example questions.
 
-This file should be placed in the root of your `llm-chatbot` folder. You can download the file from here or create an empty Python file and paste the following code:
+This file should be placed in the root of your `llm-chatbot` folder. You can download the file from here [TODO: add link] or create an empty Python file and paste the following code:
 
 ````python
 import streamlit as st
