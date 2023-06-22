@@ -544,7 +544,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
 
 6. Run the Streamlit app via `streamlit run frosty_app.py`.
 
-[TODO: add GIF once code is 100% finalized]
+![Preview of final app](assets/App_Demo.gif)
 
 The full contents of the Python file for this app are below, or you can download the file from [GitHub](TODO: ADD LINK HERE ONCE PUBLISHED).
 
