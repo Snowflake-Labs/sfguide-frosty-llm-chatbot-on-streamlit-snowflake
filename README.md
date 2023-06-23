@@ -13,6 +13,7 @@ Press the button above to get started with this guide in GitHub Codespaces. This
 - Once you launch the codespace, dependencies should be installed automatically and the app should launch after a few seconds.
 - The app needs secrets to be added, you'll need to configure `.streamlit/secrets.toml` in Codespaces (or similar) before the app succeeds. An example file is provided to help you get started. The app will show an exception on launch until this is added.
 - Please ensure codespace use is appropriate for the planned data access and usage. Consider using [encrypted secrets](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-encrypted-secrets-for-your-codespaces) for any sensitive credentials.
+- Learn more about Github Codespace free usage limits and billing [here](https://docs.github.com/en/billing/managing-billing-for-github-codespaces/about-billing-for-github-codespaces), and lifecycle of a codespace [here](https://docs.github.com/en/codespaces/getting-started/the-codespace-lifecycle).
 
 ## Step-By-Step Guide
 

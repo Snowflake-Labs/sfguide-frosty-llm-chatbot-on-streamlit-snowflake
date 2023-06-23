@@ -83,6 +83,13 @@ Duration: 8
 - If you do not have `pyarrow` installed, you do not need to install it yourself; installing Snowpark automatically installs the appropriate version.
 - Do not reinstall a different version of `pyarrow` after installing Snowpark.
 
+### Running in GitHub Codespaces
+
+If you prefer to run through the tutorial in a remote environment instead of setting up a python environment locally, you can use GitHub Codespaces.
+- You can launch a pre-configured Codespace [here](https://codespaces.new/Snowflake-Labs/sfguide-frosty-llm-chatbot-on-streamlit-snowflake?quickstart=1) with the environment setup and app code already available.
+- You'll just need to add a `.streamlit/secrets.toml` file with configuration for connecting to Snowflake and an OpenAI API Key as described in "Setting up Streamlit environment".
+- More information and references on running this quickstart in Codespaces [here](https://github.com/Snowflake-Labs/sfguide-frosty-llm-chatbot-on-streamlit-snowflake#run-in-codespaces).
+
 <!-- ------------------------ -->
 ## Accessing data on Snowflake Marketplace
 
