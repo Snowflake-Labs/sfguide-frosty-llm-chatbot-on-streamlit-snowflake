@@ -453,6 +453,8 @@ if __name__ == "__main__":
     st.markdown(get_system_prompt())
 ````
 
+Finally, you can run this file as a Streamlit app to verify the output is working correctly. Run the prompts generation via `streamlit run prompts.py`. Make sure the table information is showing up as expected in the rendered prompt - this will get passed to the chatbot in the next section.
+
 ### Build the chatbot    
 
 We'll break down the Python file snippet-by-snippet so that you understand the functionality of each section, but if you'd like to skip ahead and download the full file, you can do so [here](TODO: add link here once GH repo published).
