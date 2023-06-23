@@ -6,6 +6,16 @@
 
 In this guide, we will build an LLM-powered chatbot named "Frosty" that performs data exploration and question answering by writing and executing SQL queries on Snowflake data. The application uses Streamlit and Snowflake and can be plugged into your LLM of choice, alongside data from Snowflake Marketplace. By the end of the session, you will have an interactive web application chatbot which can converse and answer questions based on a public job listings dataset.
 
+## Run the app
+
+Once environment is set up and secrets are configured including connection to a Snowflake environment with the relevant view, the app can be run by:
+
+```sh
+streamlit run src/frosty_app.py
+```
+
+![App Demo](./assets/App_Demo.gif)
+
 ## Run in Codespaces
 
 Press the button above to get started with this guide in GitHub Codespaces. This may be especially useful if you are less comfortable with python environment setup (or don't feel like wrestling with it today). Notes and tips on using Codespaces with this guide:
