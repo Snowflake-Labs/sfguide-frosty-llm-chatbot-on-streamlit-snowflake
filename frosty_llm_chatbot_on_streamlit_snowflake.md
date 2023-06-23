@@ -2,7 +2,7 @@ summary: This guide provides the instructions for writing an LLM chatbot in Stre
 id: frosty_llm_chatbot_on_streamlit_snowflake
 categories: data-science-&-ml,app-development
 environments: web
-status: Hidden 
+status: Publish
 feedback link: https://github.com/Snowflake-Labs/sfguides/issues
 tags: Snowpark Python, Streamlit, OpenAI, LLMs
 authors: Joshua Carroll, Richard Meng, Caroline Frasca
@@ -131,7 +131,7 @@ Before building our app, we need to run a set of SQL statements in Snowflake to 
       * Only the set of attributes from FINANCIAL_ENTITY_ATTRIBUTES_LIMITED are exposed
       * Only the end of year metrics (YYYY-12-31) are included, and a YEAR column is provided instead of the date column
 
-You can copy the SQL statements from this file[TODO: add link here] and run them in the worksheet created for your sample queries.
+You can copy the SQL statements from [this file](https://github.com/Snowflake-Labs/sfguide-frosty-llm-chatbot-on-streamlit-snowflake/blob/main/src/create-views.sql) and run them in the worksheet created for your sample queries.
 
 ![GIF showing the SQL statements being run in Snowflake](assets/Run_Queries.gif)
 
@@ -246,7 +246,7 @@ Duration: 8
 
 We're ready to start building our app! We're going to first build a simple version of the chatbot app that simply passes user-inputted messages to GPT-3.5 and returns GPT-3.5's response. We'll build on the app's complexity in subsequent sections.
 
-We'll break down the Python file snippet-by-snippet so that you understand the functionality of each section, but if you'd like to skip ahead and download the full file, you can do so [here](TODO: add link here once GH repo published).
+We'll break down the Python file snippet-by-snippet so that you understand the functionality of each section, but if you'd like to skip ahead and download the full file, you can do so [here](https://github.com/Snowflake-Labs/sfguide-frosty-llm-chatbot-on-streamlit-snowflake/blob/main/src/simple_chatbot.py).
 
 1. Create a file called `simple_chatbot.py`. Add import statements and give your app a title.
 ```python
@@ -305,7 +305,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
 
 ![GIF demonstrating the simple chatbot app](assets/Simple_Chatbot.gif)
 
-The full contents of the Python file for this simple chatbot app are below, or you can download the file from [GitHub](TODO: ADD LINK HERE ONCE PUBLISHED).
+The full contents of the Python file for this simple chatbot app are below, or you can download the file from [GitHub](https://github.com/Snowflake-Labs/sfguide-frosty-llm-chatbot-on-streamlit-snowflake/blob/main/src/simple_chatbot.py).
 
 ```python
 import openai
@@ -350,8 +350,8 @@ Duration: 10
 
 Now that we've built a simple version of the chatbot app, let's expand the functionality to enable Frosty to translate our requests into SQL statements and execute those statements using the Cybersyn dataset stored in our Snowflake database.
 
-### Create a helper file
-We're also going to create a helper Python file before building out the main file of our chatbot app. The primary purpose of this file is to create the function `get_system_prompt()`, which will be called in our main Python file and will do a few things:
+### Create a prompt file
+We're also going to create a prompt Python file before building out the main file of our chatbot app. The primary purpose of this file is to create the function `get_system_prompt()`, which will be called in our main Python file and will do a few things:
   * Retrieves basic information about the database we're going to be using, including the table name, table description, and variable names
   * Composes a system message for GPT-3.5, which shares basic information about the dataset with the model and instructs the model to:
     * Respond in the character of an AI Snowflake SQL expert named Frosty
@@ -364,7 +364,7 @@ We're also going to create a helper Python file before building out the main fil
     * Use "ilike %keyword%" for fuzzy match queries.
     * Start the conversation by briefly introducing yourself, describing the table, sharing available metrics in a few sentences, and providing three example questions.
 
-This file should be placed in the root of your `llm-chatbot` folder. You can download the file from here [TODO: add link] or create an empty Python file and paste the following code:
+This file should be placed in the root of your `llm-chatbot` folder. You can download the file from [here](https://github.com/Snowflake-Labs/sfguide-frosty-llm-chatbot-on-streamlit-snowflake/blob/main/src/prompts.py) or create an empty Python file and paste the following code:
 
 ````python
 import streamlit as st
@@ -462,7 +462,7 @@ Finally, you can run this file as a Streamlit app to verify the output is workin
 
 ### Build the chatbot    
 
-We'll break down the Python file snippet-by-snippet so that you understand the functionality of each section, but if you'd like to skip ahead and download the full file, you can do so [here](TODO: add link here once GH repo published).
+We'll break down the Python file snippet-by-snippet so that you understand the functionality of each section, but if you'd like to skip ahead and download the full file, you can do so [here](https://github.com/Snowflake-Labs/sfguide-frosty-llm-chatbot-on-streamlit-snowflake/blob/main/src/frosty_app.py).
 
 1. Create a file called `frosty_app.py` and add the below code snippet, which does the following:
    * Adds import statements and a title
@@ -537,7 +537,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
 
 ![Preview of final app](assets/App_Demo.gif)
 
-The full contents of the Python file for this app are below, or you can download the file from [GitHub](TODO: ADD LINK HERE ONCE PUBLISHED).
+The full contents of the Python file for this app are below, or you can download the file from [GitHub](https://github.com/Snowflake-Labs/sfguide-frosty-llm-chatbot-on-streamlit-snowflake/blob/main/src/frosty_app.py).
 
 ```python
 import openai
@@ -627,7 +627,7 @@ Check out the Frosty session (ML103) from Snowflake Summit 2023 for more ideas a
 ### Additional resources
 Want to learn more about the tools and technologies used by your app? Check out the following resources:
 
-* [Streamlit's new chat UI]() TODO: Add link here once docs are live
+* [Streamlit's new chat UI](https://docs.streamlit.io/library/api-reference)
 * [st.experimental_connection](https://docs.streamlit.io/library/api-reference/connections/st.experimental_connection)
 * [Session state](https://docs.streamlit.io/library/api-reference/session-state)
 * [Secrets management](https://docs.streamlit.io/streamlit-community-cloud/get-started/deploy-an-app/connect-to-data-sources/secrets-management)
