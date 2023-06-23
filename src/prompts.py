@@ -2,11 +2,15 @@ import streamlit as st
 
 
 QUALIFIED_TABLE_NAME = "FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ANNUAL_TIME_SERIES"
-METADATA_QUERY = "SELECT VARIABLE_NAME, DEFINITION FROM FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ATTRIBUTES_LIMITED;"
 TABLE_DESCRIPTION = """
 This table has various metrics for financial entities (also referred to as banks) since 1983.
 The user may describe the entities interchangeably as banks, financial institutions, or financial entities.
 """
+# This query is optional if running Frosty on your own table, especially a wide table.
+# Since this is a deep table, it's useful to tell Frosty what variables are available.
+# Similarly, if you have a table with semi-structured data (like JSON), it could be used to provide hints on available keys.
+# If altering, you may also need to modify the formatting logic in get_table_context() below.
+METADATA_QUERY = "SELECT VARIABLE_NAME, DEFINITION FROM FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ATTRIBUTES_LIMITED;"
 
 
 GEN_SQL = """
