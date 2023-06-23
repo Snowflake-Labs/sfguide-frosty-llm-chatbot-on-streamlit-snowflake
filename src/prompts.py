@@ -2,8 +2,15 @@ import streamlit as st
 
 
 QUALIFIED_TABLE_NAME = "FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ANNUAL_TIME_SERIES"
+TABLE_DESCRIPTION = """
+This table has various metrics for financial entities (also referred to as banks) since 1983.
+The user may describe the entities interchangeably as banks, financial institutions, or financial entities.
+"""
+# This query is optional if running Frosty on your own table, especially a wide table.
+# Since this is a deep table, it's useful to tell Frosty what variables are available.
+# Similarly, if you have a table with semi-structured data (like JSON), it could be used to provide hints on available keys.
+# If altering, you may also need to modify the formatting logic in get_table_context() below.
 METADATA_QUERY = "SELECT VARIABLE_NAME, DEFINITION FROM FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ATTRIBUTES_LIMITED;"
-TABLE_DESCRIPTION = """This table has various metrics for financial entities (aka banks) since 1983. The user may describe the entities interchangeably as banks, financial institutions, or financial entities."""
 
 
 GEN_SQL = """
@@ -21,7 +28,7 @@ Here are 6 critical rules for the interaction you must abide:
 ```sql
 (select 1) union (select 2)
 ```
-2. If I don't tell you to find a limited set of results in sql query, you should limit the number of responses to 10.
+2. If I don't tell you to find a limited set of results in the sql query or question, you MUST limit the number of responses to 10.
 3. Text / string where clauses must be fuzzy match e.g ilike %keyword%
 4. Make sure to generate a single snowflake sql code, not multiple. 
 5. You should only use the table columns given in <columns>, and the table given in <tableName>, you MUST NOT hallucinate about the table names
@@ -44,8 +51,10 @@ Then provide 3 example questions using bullet points.
 def get_table_context(table_name: str, table_description: str, metadata_query: str = None):
     table = table_name.split(".")
     conn = st.experimental_connection("snowpark")
-    columns = conn.query(
-        f"SELECT COLUMN_NAME, DATA_TYPE FROM {table[0]}.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{table[1]}' AND TABLE_NAME = '{table[2]}'",
+    columns = conn.query(f"""
+        SELECT COLUMN_NAME, DATA_TYPE FROM {table[0].upper()}.INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = '{table[1].upper()}' AND TABLE_NAME = '{table[2].upper()}'
+        """,
     )
     columns = "\n".join(
         [

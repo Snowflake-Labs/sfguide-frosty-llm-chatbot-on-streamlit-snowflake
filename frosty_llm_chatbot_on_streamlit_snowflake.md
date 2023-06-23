@@ -83,6 +83,13 @@ Duration: 8
 - If you do not have `pyarrow` installed, you do not need to install it yourself; installing Snowpark automatically installs the appropriate version.
 - Do not reinstall a different version of `pyarrow` after installing Snowpark.
 
+### Running in GitHub Codespaces
+
+If you prefer to run through the tutorial in a remote environment instead of setting up a python environment locally, you can use GitHub Codespaces.
+- You can launch a pre-configured Codespace [here](https://codespaces.new/Snowflake-Labs/sfguide-frosty-llm-chatbot-on-streamlit-snowflake?quickstart=1) with the environment setup and app code already available.
+- You'll just need to add a `.streamlit/secrets.toml` file with configuration for connecting to Snowflake and an OpenAI API Key as described in "Setting up Streamlit environment".
+- More information and references on running this quickstart in Codespaces [here](https://github.com/Snowflake-Labs/sfguide-frosty-llm-chatbot-on-streamlit-snowflake#run-in-codespaces).
+
 <!-- ------------------------ -->
 ## Accessing data on Snowflake Marketplace
 
@@ -364,7 +371,10 @@ import streamlit as st
 
 QUALIFIED_TABLE_NAME = "FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ANNUAL_TIME_SERIES"
 METADATA_QUERY = "SELECT VARIABLE_NAME, DEFINITION FROM FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ATTRIBUTES_LIMITED;"
-TABLE_DESCRIPTION = """This table has various metrics for financial entities (aka banks) since 1983. The user may describe the entities interchangeably as banks, financial institutions, or financial entities."""
+TABLE_DESCRIPTION = """
+This table has various metrics for financial entities (also referred to as banks) since 1983.
+The user may describe the entities interchangeably as banks, financial institutions, or financial entities.
+"""
 
 GEN_SQL = """
 You will be acting as an AI Snowflake SQL expert named Frosty.
@@ -381,7 +391,7 @@ Here are 6 critical rules for the interaction you must abide:
 ```sql
 (select 1) union (select 2)
 ```
-2. If I don't tell you to find a limited set of results in the SQL query, you should limit the number of responses to 10.
+2. If I don't tell you to find a limited set of results in the sql query or question, you MUST limit the number of responses to 10.
 3. Text / string where clauses must be fuzzy match e.g ilike %keyword%
 4. Make sure to generate a single Snowflake SQL code snippet, not multiple. 
 5. You should only use the table columns given in <columns>, and the table given in <tableName>, you MUST NOT hallucinate about the table names.
@@ -403,8 +413,10 @@ Then provide 3 example questions using bullet points.
 def get_table_context(table_name: str, table_description: str, metadata_query: str = None):
     table = table_name.split(".")
     conn = st.experimental_connection("snowpark")
-    columns = conn.query(
-        f"SELECT COLUMN_NAME, DATA_TYPE FROM {table[0]}.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{table[1]}' AND TABLE_NAME = '{table[2]}'",
+    columns = conn.query(f"""
+        SELECT COLUMN_NAME, DATA_TYPE FROM {table[0].upper()}.INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = '{table[1].upper()}' AND TABLE_NAME = '{table[2].upper()}'
+        """,
     )
     columns = "\n".join(
         [
@@ -445,6 +457,8 @@ if __name__ == "__main__":
     st.header("System prompt for Frosty")
     st.markdown(get_system_prompt())
 ````
+
+Finally, you can run this file as a Streamlit app to verify the output is working correctly. Run the prompts generation via `streamlit run prompts.py`. Make sure the table information is showing up as expected in the rendered prompt - this will get passed to the chatbot in the next section.
 
 ### Build the chatbot    
 
@@ -595,11 +609,22 @@ Finally, it's time to explore the Cybersyn Financial & Economic Essentials using
 10. How many banks headquartered in New Hampshire experienced more than 50% growth in their total assets between 2015 and 2020?
 
 <!-- ------------------------ -->
-## Conclusion and resources
+## Conclusion and next steps
 Duration: 1
 
 Congratulations – you've just build an LLM-powered chatbot capable of translating natural language to SQL queries and running those queries on data stored in Snowflake!
 
+### Where to go from here
+
+This tutorial is just a starting point for exploring the possibilities of LLM-powered chat interfaces for data exploration and question answering using Snowflake and Streamlit. A few next things to try:
+
+- **Update to run against your private data in Snowflake**, or other relevant Snowflake Marketplace datasets. The table-specific logic in the app is all specified at the top of `prompts.py`, so it should be easy to swap and start playing around!
+- **Add more capabilities**, such as using the LLM to choose from a set of available tables, summarize the returned data, or even write Streamlit code to visualize the results. You could even use a library like LangChain to convert Frosty into an "Agent" with improved chain of thought reasoning and ability to respond to errors.
+- **Prepare to run in Streamlit in Snowflake** (currently in Private Preview): The functionality shown here will soon be available in Streamlit in Snowflake (SiS), especially when paired with External Access (also in Private Preview) to simplify access to an external LLM.
+
+Check out the Frosty session (ML103) from Snowflake Summit 2023 for more ideas and what's coming soon from Snowflake!
+
+### Additional resources
 Want to learn more about the tools and technologies used by your app? Check out the following resources:
 
 * [Streamlit's new chat UI]() TODO: Add link here once docs are live
