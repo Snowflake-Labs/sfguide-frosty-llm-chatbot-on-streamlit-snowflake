@@ -609,11 +609,22 @@ Finally, it's time to explore the Cybersyn Financial & Economic Essentials using
 10. How many banks headquartered in New Hampshire experienced more than 50% growth in their total assets between 2015 and 2020?
 
 <!-- ------------------------ -->
-## Conclusion and resources
+## Conclusion and next steps
 Duration: 1
 
 Congratulations – you've just build an LLM-powered chatbot capable of translating natural language to SQL queries and running those queries on data stored in Snowflake!
 
+### Where to go from here
+
+This tutorial is just a starting point for exploring the possibilities of LLM-powered chat interfaces for data exploration and question answering using Snowflake and Streamlit. A few next things to try:
+
+- **Update to run against your private data in Snowflake**, or other relevant Snowflake Marketplace datasets. The table-specific logic in the app is all specified at the top of `prompts.py`, so it should be easy to swap and start playing around!
+- **Add more capabilities**, such as using the LLM to choose from a set of available tables, summarize the returned data, or even write Streamlit code to visualize the results. You could even use a library like LangChain to convert Frosty into an "Agent" with improved chain of thought reasoning and ability to respond to errors.
+- **Prepare to run in Streamlit in Snowflake** (currently in Private Preview): The functionality shown here will soon be available in Streamlit in Snowflake (SiS), especially when paired with External Access (also in Private Preview) to simplify access to an external LLM.
+
+Check out the Frosty session (ML103) from Snowflake Summit 2023 for more ideas and what's coming soon from Snowflake!
+
+### Additional resources
 Want to learn more about the tools and technologies used by your app? Check out the following resources:
 
 * [Streamlit's new chat UI]() TODO: Add link here once docs are live
