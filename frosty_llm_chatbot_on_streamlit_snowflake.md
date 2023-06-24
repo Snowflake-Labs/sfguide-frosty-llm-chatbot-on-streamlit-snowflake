@@ -219,14 +219,14 @@ completion = openai.ChatCompletion.create(
 
 st.write(completion.choices[0].message.content)
 ```
-3. Run your Streamlit app by entering `run streamlit validate_credentials.py` in the command line.
+3. Run your Streamlit app by entering `streamlit run validate_credentials.py` in the command line.
 ![alt_text](assets/Validate_OpenAI_Creds.png)
 
 #### Snowflake credentials
 
 Next, let's validate that our Snowflake credentials are working as expected.
 
-Replace the contents of `validate_credentials.py` with the below code. This snippet does the following:
+1. Replace the contents of `validate_credentials.py` with the below code. This snippet does the following:
    * Imports the Streamlit package
    * Creates a Snowpark connection
    * Executes a query to pull the current warehouse and writes the result to the UI
@@ -238,6 +238,8 @@ conn = st.experimental_connection("snowpark")
 df = conn.query("select current_warehouse()")
 st.write(df)
 ```
+
+2. Run your Streamlit app by entering `streamlit run validate_credentials.py` in the command line.
 ![alt_text](assets/Validate_Snowflake_Creds.png)
 
 <!-- ------------------------ -->
