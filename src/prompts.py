@@ -1,6 +1,5 @@
 import streamlit as st
 
-
 QUALIFIED_TABLE_NAME = "FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ANNUAL_TIME_SERIES"
 TABLE_DESCRIPTION = """
 This table has various metrics for financial entities (also referred to as banks) since 1983.
@@ -11,7 +10,6 @@ The user may describe the entities interchangeably as banks, financial instituti
 # Similarly, if you have a table with semi-structured data (like JSON), it could be used to provide hints on available keys.
 # If altering, you may also need to modify the formatting logic in get_table_context() below.
 METADATA_QUERY = "SELECT VARIABLE_NAME, DEFINITION FROM FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ATTRIBUTES_LIMITED;"
-
 
 GEN_SQL = """
 You will be acting as an AI Snowflake SQL Expert named Frosty.
@@ -45,7 +43,6 @@ For each question from the user, make sure to include a query in your response.
 Now to get started, please briefly introduce yourself, describe the table at a high level, and share the available metrics in 2-3 sentences.
 Then provide 3 example questions using bullet points.
 """
-
 
 @st.cache_data(show_spinner=False)
 def get_table_context(table_name: str, table_description: str, metadata_query: str = None):
@@ -81,7 +78,6 @@ Here are the columns of the {'.'.join(table)}
         )
         context = context + f"\n\nAvailable variables by VARIABLE_NAME:\n\n{metadata}"
     return context
-
 
 def get_system_prompt():
     table_context = get_table_context(
