@@ -32,12 +32,6 @@ A large language model, or LLM, is a deep learning algorithm that can recognize,
 ### What is OpenAI?
 OpenAI is the AI research and deployment company behind ChatGPT, GPT-4 (and its predecessors), DALL-E, and other notable offerings. Learn more about [OpenAI](https://openai.com/). We use OpenAI in this guide, but you are welcome to use the large language model of your choice in its place.
 
-### What you’ll learn
-* How to create a web application from a Python script with Streamlit
-* How to use [`st.experimental_connection`](https://docs.streamlit.io/library/api-reference/connections/st.experimental_connection) to connect your Streamlit app to Snowflake
-* How to build a chatbot in just a few lines of code using Streamlit's new chat UI
-* How to use [`session state`](https://docs.streamlit.io/library/api-reference/session-state) to store your chatbot's message history
-
 ### Prerequisites
 * Accountadmin role access in Snowflake or a [Snowflake trial account](https://signup.snowflake.com/)
 * An API key for OpenAI or another Large Language Model
@@ -622,7 +616,7 @@ This tutorial is just a starting point for exploring the possibilities of LLM-po
 
 - **Update to run against your private data in Snowflake**, or other relevant Snowflake Marketplace datasets. The table-specific logic in the app is all specified at the top of `prompts.py`, so it should be easy to swap and start playing around!
 - **Add more capabilities**, such as using the LLM to choose from a set of available tables, summarize the returned data, or even write Streamlit code to visualize the results. You could even use a library like LangChain to convert Frosty into an "Agent" with improved chain of thought reasoning and the ability to respond to errors.
-- **Prepare to run in Streamlit in Snowflake** (currently in Private Preview): The functionality shown here will soon be available in Streamlit in Snowflake (SiS), especially when paired with External Access (also in Private Preview) to simplify access to an external LLM.
+- **Prepare to run in Streamlit in Snowflake** (currently in Private Preview): The functionality shown here will soon be available in Streamlit in Snowflake, especially when paired with External Access (also in Private Preview) to simplify access to an external LLM.
 
 Check out the Frosty session (ML103) from Snowflake Summit 2023 for more ideas and what's coming soon from Snowflake!
 
