@@ -623,7 +623,7 @@ Check out the Frosty session (ML103) from Snowflake Summit 2023 for more ideas a
 ### Additional resources
 Want to learn more about the tools and technologies used by your app? Check out the following resources:
 
-* [Streamlit's new chat UI](https://docs.streamlit.io/library/api-reference)
+* [Streamlit's new chat UI](https://docs.streamlit.io/library/api-reference/chat)
 * [st.experimental_connection](https://docs.streamlit.io/library/api-reference/connections/st.experimental_connection)
 * [Session state](https://docs.streamlit.io/library/api-reference/session-state)
 * [Secrets management](https://docs.streamlit.io/streamlit-community-cloud/get-started/deploy-an-app/connect-to-data-sources/secrets-management)
