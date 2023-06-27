@@ -1,3 +1,3 @@
 snowflake-snowpark-python[pandas]==1.5.1
-https://core-previews.s3-us-west-2.amazonaws.com/develop-preview/streamlit-1.23.1-py2.py3-none-any.whl
+streamlit==1.24.0
 openai==0.27.8
