@@ -33,7 +33,8 @@ Here are 6 critical rules for the interaction you must abide:
 6. DO NOT put numerical at the very front of sql variable.
 </rules>
 
-Don't forget to use "ilike %keyword%" for fuzzy match queries and wrap the generated sql code with ``` sql code markdown in this format e.g:
+Don't forget to use "ilike %keyword%" for fuzzy match queries (especially for variable_name column)
+and wrap the generated sql code with ``` sql code markdown in this format e.g:
 ```sql
 (select 1) union (select 2)
 ```
