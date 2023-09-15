@@ -35,6 +35,7 @@ class AppTest(InteractiveScriptTests):
     @patch('streamlit.secrets')
     def test_validate_creds(self, secrets, conn, openai_create):
         """Test the validate credentials script"""
+        script = self.script_from_filename("validate_credentials.py")
 
         # Set up all the mocks
         secrets.return_value = AttrDict({'OPENAI_API_KEY': 'sk-...'})
@@ -43,7 +44,6 @@ class AppTest(InteractiveScriptTests):
         openai_create.return_value = create_openai_object_sync("Streamlit is really awesome!")
 
         # Run the script and compare results
-        script = self.script_from_filename("validate_credentials.py")
         sr = script.run()
         print(sr)
         result_df = bytes_to_data_frame(sr.get("arrow_data_frame")[0].proto.arrow_data_frame.data)
@@ -54,6 +54,7 @@ class AppTest(InteractiveScriptTests):
     @patch("streamlit.experimental_connection")
     def test_prompts(self, conn):
         """Test the validate credentials script"""
+        script = self.script_from_filename("prompts.py")
 
         # Set up all the mocks
         schema_info = pd.DataFrame({
@@ -72,7 +73,6 @@ class AppTest(InteractiveScriptTests):
         conn.return_value.query.side_effect = prompt_query_results
 
         # Run the script and compare results
-        script = self.script_from_filename("prompts.py")
         sr = script.run()
         print(sr)
         assert sr.header[0].value == "System prompt for Frosty"
@@ -87,6 +87,7 @@ class AppTest(InteractiveScriptTests):
     @patch('streamlit.secrets')
     def test_frosty_app(self, secrets, system_prompt, conn, openai_create):
         """Test the full frosty app - happy path"""
+        script = self.script_from_filename("frosty_app.py")
 
         # Set up all the mocks
         secrets.return_value = AttrDict({'OPENAI_API_KEY': 'sk-...'})
@@ -96,7 +97,6 @@ class AppTest(InteractiveScriptTests):
         openai_create.return_value = create_openai_object_stream(INITIAL_RESPONSE)
 
         # Run the script and compare results
-        script = self.script_from_filename("frosty_app.py")
         sr = script.run()
         print(sr)
         assert sr.session_state["messages"] == [{"role": "system", "content": SYS_PROMPT}, {"role": "assistant", "content": INITIAL_RESPONSE}]
