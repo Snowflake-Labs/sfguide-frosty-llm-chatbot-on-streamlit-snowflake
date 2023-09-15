@@ -8,7 +8,7 @@ import pandas as pd
 
 
 # See https://github.com/openai/openai-python/issues/398
-def create_openai_object_sync(response, role="assistant") -> OpenAIObject:
+def create_openai_object_sync(response: str, role: str = "assistant") -> OpenAIObject:
     obj = OpenAIObject()
     message = OpenAIObject()
     content = OpenAIObject()
@@ -18,6 +18,16 @@ def create_openai_object_sync(response, role="assistant") -> OpenAIObject:
     obj.choices = [message]
     return obj
 
+
+def create_openai_object_stream(response: str) -> OpenAIObject:
+    for token in response:
+        obj = OpenAIObject()
+        delta = OpenAIObject()
+        content = OpenAIObject()
+        content.content = token
+        delta.delta = content
+        obj.choices = [delta]
+        yield obj
 
 class AppTest(InteractiveScriptTests):
     @patch("openai.ChatCompletion.create")
@@ -69,4 +79,58 @@ class AppTest(InteractiveScriptTests):
         system_prompt = sr.markdown[0].value
         assert "You will be acting as an AI Snowflake SQL Expert named Frosty." in system_prompt
         assert "- **Total Securities**: Total value of securities" in system_prompt
+        assert not sr.exception
+
+    @patch("openai.ChatCompletion.create")
+    @patch("streamlit.experimental_connection")
+    @patch("prompts.get_system_prompt")
+    @patch('streamlit.secrets')
+    def test_frosty_app(self, secrets, system_prompt, conn, openai_create):
+        """Test the full frosty app - happy path"""
+
+        # Set up all the mocks
+        secrets.return_value = AttrDict({'OPENAI_API_KEY': 'sk-...'})
+        SYS_PROMPT = "You will be acting as an AI Snowflake SQL Expert named Frosty."
+        INITIAL_RESPONSE = "Hello there! I'm Frosty, and I can answer questions from a financial table. Please ask your question!"
+        system_prompt.return_value = SYS_PROMPT
+        openai_create.return_value = create_openai_object_stream(INITIAL_RESPONSE)
+
+        # Run the script and compare results
+        script = self.script_from_filename("frosty_app.py")
+        sr = script.run()
+        print(sr)
+        assert sr.session_state["messages"] == [{"role": "system", "content": SYS_PROMPT}, {"role": "assistant", "content": INITIAL_RESPONSE}]
+        assert sr.get("chat_message")[0].proto.chat_message.avatar == "assistant"
+        assert sr.get("chat_message")[0].markdown[0].value == INITIAL_RESPONSE
+
+        # Add a user prompt and confirm everything works as expected
+        # Hack since chat_input isn't supported yet
+        PROMPT = "Which bank had the highest total assets in 2017?"
+        sr.session_state["prompt_input"] = PROMPT
+        SECOND_RESPONSE = """To find the financial entity that had the highest Total assets in 2017, we can use the following SQL query:
+```sql
+SELECT ENTITY_NAME, VALUE FROM AWESOME_FROSTY_TABLE
+WHERE VARIABLE_NAME = 'Total assets' AND YEAR = 2019
+ORDER BY VALUE DESC LIMIT 1;
+```
+This query selects the ENTITY_NAME and VALUE columns from the table where the VARIABLE_NAME is 'Total assets' and the YEAR is 2017."""
+        openai_create.return_value = create_openai_object_stream(SECOND_RESPONSE)
+        expected_df = pd.DataFrame({
+            "ENTITY_NAME": ["JPMorgan Chase Bank, National Association"],
+            "VALUE": [1651125000000]
+        })
+        def prompt_query_results(sql):
+            if "SELECT ENTITY_NAME, VALUE FROM AWESOME_FROSTY_TABLE" in sql:
+                return expected_df
+        conn.return_value.query.side_effect = prompt_query_results
+
+        sr = sr.run()
+        print(sr)
+        print(sr.session_state["messages"][3])
+        assert sr.get("chat_message")[1].proto.chat_message.avatar == "user"
+        assert sr.get("chat_message")[1].markdown[0].value == PROMPT
+        assert sr.get("chat_message")[2].proto.chat_message.avatar == "assistant"
+        assert "To find the financial entity that had the highest Total assets in 2017" in sr.get("chat_message")[2].markdown[0].value
+        result_df = bytes_to_data_frame(sr.get("chat_message")[2].get("arrow_data_frame")[0].proto.arrow_data_frame.data)
+        assert result_df.equals(expected_df)
         assert not sr.exception
