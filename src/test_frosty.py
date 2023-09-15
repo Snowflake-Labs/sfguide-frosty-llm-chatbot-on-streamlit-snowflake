@@ -65,6 +65,7 @@ class AppTest(InteractiveScriptTests):
         script = self.script_from_filename("prompts.py")
         sr = script.run()
         print(sr)
+        assert sr.header[0].value == "System prompt for Frosty"
         system_prompt = sr.markdown[0].value
         assert "You will be acting as an AI Snowflake SQL Expert named Frosty." in system_prompt
         assert "- **Total Securities**: Total value of securities" in system_prompt
