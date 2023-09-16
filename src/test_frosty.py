@@ -53,7 +53,7 @@ class AppTest(InteractiveScriptTests):
 
     @patch("streamlit.experimental_connection")
     def test_prompts(self, conn):
-        """Test the validate credentials script"""
+        """Test the get_system_prompt script"""
         script = self.script_from_filename("prompts.py")
 
         # Set up all the mocks
