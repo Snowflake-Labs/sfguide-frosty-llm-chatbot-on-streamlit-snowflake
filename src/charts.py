@@ -29,4 +29,16 @@ def render_data(data, key):
     # render chart
     type = data.get("type", DEFAULT_TYPE)
     func = CHART_FUNCTIONS[type]["func"]
-    func(data["data"])
+    df = data["data"]
+
+    # if the function is st.dataframe, just render the dataframe
+    if func == st.dataframe:
+        st.dataframe(df)
+        return
+    # if there are more than or two columns, use the first column as the label for the x-axis and the second for the y-axis
+    if len(df.columns) >= 2:
+        x_axis = df.columns[0]
+        y_axis = df.columns[1]
+        func(df, x=x_axis, y=y_axis)
+    else:
+        func(df)
