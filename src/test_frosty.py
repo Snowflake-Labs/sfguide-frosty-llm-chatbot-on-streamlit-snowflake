@@ -95,15 +95,13 @@ def test_frosty_app(secrets, system_prompt, conn, openai_create):
 
     # Run the script and compare results
     at.run()
-    print(at)
+    #print(at)
     assert at.session_state["messages"] == [{"role": "system", "content": SYS_PROMPT}, {"role": "assistant", "content": INITIAL_RESPONSE}]
-    assert at.get("chat_message")[0].proto.chat_message.avatar == "assistant"
-    assert at.get("chat_message")[0].markdown[0].value == INITIAL_RESPONSE
+    assert at.chat_message[0].avatar == "assistant"
+    assert at.chat_message[0].markdown[0].value == INITIAL_RESPONSE
 
-    # Add a user prompt and confirm everything works as expected
-    # Hack since chat_input isn't supported yet
+
     PROMPT = "Which bank had the highest total assets in 2017?"
-    at.session_state["prompt_input"] = PROMPT
     SECOND_RESPONSE = """To find the financial entity that had the highest Total assets in 2017, we can use the following SQL query:
 ```sql
 SELECT ENTITY_NAME, VALUE FROM AWESOME_FROSTY_TABLE
@@ -121,12 +119,11 @@ This query selects the ENTITY_NAME and VALUE columns from the table where the VA
             return expected_df
     conn.return_value.query.side_effect = prompt_query_results
 
-    at.run()
-    print(at)
-    print(at.session_state["messages"][3])
-    assert at.get("chat_message")[1].proto.chat_message.avatar == "user"
-    assert at.get("chat_message")[1].markdown[0].value == PROMPT
-    assert at.get("chat_message")[2].proto.chat_message.avatar == "assistant"
-    assert "To find the financial entity that had the highest Total assets in 2017" in at.get("chat_message")[2].markdown[0].value
-    assert at.get("chat_message")[2].dataframe[0].value.equals(expected_df)
+    at.chat_input[0].set_value(PROMPT).run()
+    #print(at)
+    assert at.chat_message[1].avatar == "user"
+    assert at.chat_message[1].markdown[0].value == PROMPT
+    assert at.chat_message[2].avatar == "assistant"
+    assert "To find the financial entity that had the highest Total assets in 2017" in at.chat_message[2].markdown[0].value
+    assert at.chat_message[2].dataframe[0].value.equals(expected_df)
     assert not at.exception

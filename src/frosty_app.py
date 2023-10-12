@@ -13,7 +13,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": get_system_prompt()}]
 
 # Prompt for user input and save
-if prompt := st.chat_input(key="prompt_input"):
+if prompt := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": prompt})
 
 # display the existing chat messages
