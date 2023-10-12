@@ -3,7 +3,7 @@ import re
 import streamlit as st
 from prompts import get_system_prompt
 
-st.title("☃️ Frosty")
+st.title("Large Marge")
 
 # Initialize the chat messages history
 openai.api_key = st.secrets.OPENAI_API_KEY

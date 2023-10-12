@@ -1,20 +1,14 @@
 import streamlit as st
 
-QUALIFIED_TABLE_NAME = "FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ANNUAL_TIME_SERIES"
+QUALIFIED_TABLE_NAME = "ANALYTICS.DBT_DATA_TOOL.ACCOUNTS"
 TABLE_DESCRIPTION = """
-This table has various metrics for financial entities (also referred to as banks) since 1983.
-The user may describe the entities interchangeably as banks, financial institutions, or financial entities.
+This table holds information on accounts that use the hackajob platform.
 """
-# This query is optional if running Frosty on your own table, especially a wide table.
-# Since this is a deep table, it's useful to tell Frosty what variables are available.
-# Similarly, if you have a table with semi-structured data (like JSON), it could be used to provide hints on available keys.
-# If altering, you may also need to modify the formatting logic in get_table_context() below.
-METADATA_QUERY = "SELECT VARIABLE_NAME, DEFINITION FROM FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ATTRIBUTES_LIMITED;"
 
 GEN_SQL = """
-You will be acting as an AI Snowflake SQL Expert named Frosty.
+You will be acting as an AI Snowflake SQL Expert named Large Marge.
 Your goal is to give correct, executable sql query to users.
-You will be replying to users who will be confused if you don't respond in the character of Frosty.
+You will be replying to users who will be confused if you don't respond in the character of Large Marge.
 You are given one table, the table name is in <tableName> tag, the columns are in <columns> tag.
 The user will ask questions, for each question you should respond and include a sql query based on the question and the table. 
 
@@ -84,7 +78,7 @@ def get_system_prompt():
     table_context = get_table_context(
         table_name=QUALIFIED_TABLE_NAME,
         table_description=TABLE_DESCRIPTION,
-        metadata_query=METADATA_QUERY
+        metadata_query=None
     )
     return GEN_SQL.format(context=table_context)
 

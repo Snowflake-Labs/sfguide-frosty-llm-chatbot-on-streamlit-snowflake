@@ -4,3 +4,5 @@ venv
 .python-version
 __pycache__
 secrets.toml
+.idea/
+env/
