@@ -1,6 +1,5 @@
 from unittest.mock import patch
 
-from streamlit.runtime.secrets import AttrDict
 from streamlit.testing.v1 import AppTest
 from openai.openai_object import OpenAIObject
 import pandas as pd
@@ -30,13 +29,12 @@ def create_openai_object_stream(response: str) -> OpenAIObject:
 
 @patch("openai.ChatCompletion.create")
 @patch("streamlit.experimental_connection")
-@patch('streamlit.secrets')
-def test_validate_creds(secrets, conn, openai_create):
+def test_validate_creds(conn, openai_create):
     """Test the validate credentials script"""
     at = AppTest.from_file("validate_credentials.py")
 
     # Set up all the mocks
-    secrets.return_value = AttrDict({'OPENAI_API_KEY': 'sk-...'})
+    at.secrets = {'OPENAI_API_KEY': 'sk-...'}
     expected_df = pd.DataFrame(["XSMALL_WH"])
     conn.return_value.query.return_value = expected_df
     openai_create.return_value = create_openai_object_sync("Streamlit is really awesome!")
@@ -81,13 +79,12 @@ def test_prompts(conn):
 @patch("openai.ChatCompletion.create")
 @patch("streamlit.experimental_connection")
 @patch("prompts.get_system_prompt")
-@patch('streamlit.secrets')
-def test_frosty_app(secrets, system_prompt, conn, openai_create):
+def test_frosty_app(system_prompt, conn, openai_create):
     """Test the full frosty app - happy path"""
     at = AppTest.from_file("frosty_app.py")
 
     # Set up all the mocks
-    secrets.return_value = AttrDict({'OPENAI_API_KEY': 'sk-...'})
+    at.secrets = {'OPENAI_API_KEY': 'sk-...'}
     SYS_PROMPT = "You will be acting as an AI Snowflake SQL Expert named Frosty."
     INITIAL_RESPONSE = "Hello there! I'm Frosty, and I can answer questions from a financial table. Please ask your question!"
     system_prompt.return_value = SYS_PROMPT
