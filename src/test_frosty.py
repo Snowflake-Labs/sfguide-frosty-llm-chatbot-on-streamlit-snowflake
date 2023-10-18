@@ -34,7 +34,7 @@ def test_validate_creds(conn, openai_create):
     at = AppTest.from_file("validate_credentials.py")
 
     # Set up all the mocks
-    at.secrets = {'OPENAI_API_KEY': 'sk-...'}
+    at.secrets['OPENAI_API_KEY'] = 'sk-...'
     expected_df = pd.DataFrame(["XSMALL_WH"])
     conn.return_value.query.return_value = expected_df
     openai_create.return_value = create_openai_object_sync("Streamlit is really awesome!")
@@ -84,7 +84,7 @@ def test_frosty_app(system_prompt, conn, openai_create):
     at = AppTest.from_file("frosty_app.py")
 
     # Set up all the mocks
-    at.secrets = {'OPENAI_API_KEY': 'sk-...'}
+    at.secrets['OPENAI_API_KEY'] = 'sk-...'
     SYS_PROMPT = "You will be acting as an AI Snowflake SQL Expert named Frosty."
     INITIAL_RESPONSE = "Hello there! I'm Frosty, and I can answer questions from a financial table. Please ask your question!"
     system_prompt.return_value = SYS_PROMPT
