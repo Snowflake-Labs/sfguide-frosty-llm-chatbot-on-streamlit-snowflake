@@ -92,7 +92,7 @@ def test_frosty_app(system_prompt, conn, openai_create):
 
     # Run the script and compare results
     at.run()
-    #print(at)
+    print(at)
     assert at.session_state["messages"] == [{"role": "system", "content": SYS_PROMPT}, {"role": "assistant", "content": INITIAL_RESPONSE}]
     assert at.chat_message[0].avatar == "assistant"
     assert at.chat_message[0].markdown[0].value == INITIAL_RESPONSE
@@ -117,7 +117,7 @@ This query selects the ENTITY_NAME and VALUE columns from the table where the VA
     conn.return_value.query.side_effect = prompt_query_results
 
     at.chat_input[0].set_value(PROMPT).run()
-    #print(at)
+    print(at)
     assert at.chat_message[1].avatar == "user"
     assert at.chat_message[1].markdown[0].value == PROMPT
     assert at.chat_message[2].avatar == "assistant"
