@@ -28,7 +28,7 @@ def create_openai_object_stream(response: str) -> OpenAIObject:
         yield obj
 
 @patch("openai.ChatCompletion.create")
-@patch("streamlit.experimental_connection")
+@patch("streamlit.connection")
 def test_validate_creds(conn, openai_create):
     """Test the validate credentials script"""
     at = AppTest.from_file("validate_credentials.py")
@@ -46,7 +46,7 @@ def test_validate_creds(conn, openai_create):
     assert at.markdown[0].value == "Streamlit is really awesome!"
     assert not at.exception
 
-@patch("streamlit.experimental_connection")
+@patch("streamlit.connection")
 def test_prompts(conn):
     """Test the get_system_prompt script"""
     at = AppTest.from_file("prompts.py")
@@ -60,7 +60,7 @@ def test_prompts(conn):
         "VARIABLE_NAME": ["Total Securities", "All Real Estate Loans"],
         "DEFINITION": ["Total value of securities", "Total value of all the real estate loans"]
     })
-    def prompt_query_results(sql):
+    def prompt_query_results(sql, **kwargs):
         if "SELECT COLUMN_NAME, DATA_TYPE" in sql:
             return schema_info
         if "SELECT VARIABLE_NAME, DEFINITION" in sql:
@@ -77,7 +77,7 @@ def test_prompts(conn):
     assert not at.exception
 
 @patch("openai.ChatCompletion.create")
-@patch("streamlit.experimental_connection")
+@patch("streamlit.connection")
 @patch("prompts.get_system_prompt")
 def test_frosty_app(system_prompt, conn, openai_create):
     """Test the full frosty app - happy path"""
@@ -111,7 +111,7 @@ This query selects the ENTITY_NAME and VALUE columns from the table where the VA
         "ENTITY_NAME": ["JPMorgan Chase Bank, National Association"],
         "VALUE": [1651125000000]
     })
-    def prompt_query_results(sql):
+    def prompt_query_results(sql, **kwargs):
         if "SELECT ENTITY_NAME, VALUE FROM AWESOME_FROSTY_TABLE" in sql:
             return expected_df
     conn.return_value.query.side_effect = prompt_query_results
