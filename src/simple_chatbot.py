@@ -1,4 +1,4 @@
-import openai
+from openai import OpenAI
 import streamlit as st
 
 st.title("☃️ Frosty")
@@ -21,9 +21,9 @@ if st.session_state.messages[-1]["role"] != "assistant":
     # Call LLM
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            r = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
+            r = OpenAI().chat.completions.create(
                 messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
+                model="gpt-3.5-turbo",
             )
             response = r.choices[0].message.content
             st.write(response)

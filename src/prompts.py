@@ -1,6 +1,7 @@
 import streamlit as st
 
-QUALIFIED_TABLE_NAME = "FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ANNUAL_TIME_SERIES"
+SCHEMA_PATH = st.secrets.get("SCHEMA_PATH", "FROSTY_SAMPLE.CYBERSYN_FINANCIAL")
+QUALIFIED_TABLE_NAME = f"{SCHEMA_PATH}.FINANCIAL_ENTITY_ANNUAL_TIME_SERIES"
 TABLE_DESCRIPTION = """
 This table has various metrics for financial entities (also referred to as banks) since 1983.
 The user may describe the entities interchangeably as banks, financial institutions, or financial entities.
@@ -9,7 +10,7 @@ The user may describe the entities interchangeably as banks, financial instituti
 # Since this is a deep table, it's useful to tell Frosty what variables are available.
 # Similarly, if you have a table with semi-structured data (like JSON), it could be used to provide hints on available keys.
 # If altering, you may also need to modify the formatting logic in get_table_context() below.
-METADATA_QUERY = "SELECT VARIABLE_NAME, DEFINITION FROM FROSTY_SAMPLE.CYBERSYN_FINANCIAL.FINANCIAL_ENTITY_ATTRIBUTES_LIMITED;"
+METADATA_QUERY = f"SELECT VARIABLE_NAME, DEFINITION FROM {SCHEMA_PATH}.FINANCIAL_ENTITY_ATTRIBUTES_LIMITED;"
 
 GEN_SQL = """
 You will be acting as an AI Snowflake SQL Expert named Frosty.
@@ -45,14 +46,14 @@ Now to get started, please briefly introduce yourself, describe the table at a h
 Then provide 3 example questions using bullet points.
 """
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner="Loading Frosty's context...")
 def get_table_context(table_name: str, table_description: str, metadata_query: str = None):
     table = table_name.split(".")
-    conn = st.experimental_connection("snowpark")
+    conn = st.connection("snowflake")
     columns = conn.query(f"""
         SELECT COLUMN_NAME, DATA_TYPE FROM {table[0].upper()}.INFORMATION_SCHEMA.COLUMNS
         WHERE TABLE_SCHEMA = '{table[1].upper()}' AND TABLE_NAME = '{table[2].upper()}'
-        """,
+        """, show_spinner=False,
     )
     columns = "\n".join(
         [
@@ -70,7 +71,7 @@ Here are the columns of the {'.'.join(table)}
 <columns>\n\n{columns}\n\n</columns>
     """
     if metadata_query:
-        metadata = conn.query(metadata_query)
+        metadata = conn.query(metadata_query, show_spinner=False)
         metadata = "\n".join(
             [
                 f"- **{metadata['VARIABLE_NAME'][i]}**: {metadata['DEFINITION'][i]}"
