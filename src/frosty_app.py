@@ -35,7 +35,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
             messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
             stream=True,
         ):
-            response += delta.choices[0].delta.get("content", "")
+            response += (delta.choices[0].delta.content or "")
             resp_container.markdown(response)
 
         message = {"role": "assistant", "content": response}
@@ -44,6 +44,6 @@ if st.session_state.messages[-1]["role"] != "assistant":
         if sql_match:
             sql = sql_match.group(1)
             conn = st.connection("snowflake")
-            message["results"] = conn.query(sql, show_spinner=False)
+            message["results"] = conn.query(sql)
             st.dataframe(message["results"])
         st.session_state.messages.append(message)
