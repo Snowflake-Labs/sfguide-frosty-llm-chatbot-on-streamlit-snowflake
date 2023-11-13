@@ -1,33 +1,55 @@
+import datetime
 from unittest.mock import patch
 
 from streamlit.testing.v1 import AppTest
-from openai.openai_object import OpenAIObject
+from openai.types.chat import ChatCompletionMessage
+from openai.types.chat.chat_completion import ChatCompletion, Choice
+from openai.types.chat.chat_completion_chunk import ChatCompletionChunk, ChoiceDelta
+from openai.types.chat.chat_completion_chunk import Choice as StreamChoice
 import pandas as pd
 
 
-# See https://github.com/openai/openai-python/issues/398
-def create_openai_object_sync(response: str, role: str = "assistant") -> OpenAIObject:
-    obj = OpenAIObject()
-    message = OpenAIObject()
-    content = OpenAIObject()
-    content.content = response
-    content.role = role
-    message.message = content
-    obj.choices = [message]
-    return obj
+# See https://github.com/openai/openai-python/issues/715#issuecomment-1809203346
+def create_chat_completion(response: str, role: str = "assistant") -> ChatCompletion:
+    return ChatCompletion(
+        id="foo",
+        model="gpt-3.5-turbo",
+        object="chat.completion",
+        choices=[
+            Choice(
+                finish_reason="stop",
+                index=0,
+                message=ChatCompletionMessage(
+                    content=response,
+                    role=role,
+                ),
+            )
+        ],
+        created=int(datetime.datetime.now().timestamp()),
+    )
 
 
-def create_openai_object_stream(response: str) -> OpenAIObject:
+def create_stream_chat_completion(response: str, role: str = "assistant"):
     for token in response:
-        obj = OpenAIObject()
-        delta = OpenAIObject()
-        content = OpenAIObject()
-        content.content = token
-        delta.delta = content
-        obj.choices = [delta]
-        yield obj
+        yield ChatCompletionChunk(
+            id="foo",
+            model="gpt-3.5-turbo",
+            object="chat.completion.chunk",
+            choices=[
+                StreamChoice(
+                    index=0,
+                    finish_reason=None,
+                    delta=ChoiceDelta(
+                        content=token,
+                        role=role,
+                    )
+                ),
+            ],
+            created=int(datetime.datetime.now().timestamp()),
+        )
 
-@patch("openai.ChatCompletion.create")
+
+@patch("openai.resources.chat.Completions.create")
 @patch("streamlit.connection")
 def test_validate_creds(conn, openai_create):
     """Test the validate credentials script"""
@@ -37,7 +59,7 @@ def test_validate_creds(conn, openai_create):
     at.secrets['OPENAI_API_KEY'] = 'sk-...'
     expected_df = pd.DataFrame(["XSMALL_WH"])
     conn.return_value.query.return_value = expected_df
-    openai_create.return_value = create_openai_object_sync("Streamlit is really awesome!")
+    openai_create.return_value = create_chat_completion("Streamlit is really awesome!")
 
     # Run the script and compare results
     at.run()
@@ -76,7 +98,7 @@ def test_prompts(conn):
     assert "- **Total Securities**: Total value of securities" in system_prompt
     assert not at.exception
 
-@patch("openai.ChatCompletion.create")
+@patch("openai.resources.chat.Completions.create")
 @patch("streamlit.connection")
 @patch("prompts.get_system_prompt")
 def test_frosty_app(system_prompt, conn, openai_create):
@@ -88,7 +110,7 @@ def test_frosty_app(system_prompt, conn, openai_create):
     SYS_PROMPT = "You will be acting as an AI Snowflake SQL Expert named Frosty."
     INITIAL_RESPONSE = "Hello there! I'm Frosty, and I can answer questions from a financial table. Please ask your question!"
     system_prompt.return_value = SYS_PROMPT
-    openai_create.return_value = create_openai_object_stream(INITIAL_RESPONSE)
+    openai_create.return_value = create_stream_chat_completion(INITIAL_RESPONSE)
 
     # Run the script and compare results
     at.run()
@@ -106,7 +128,7 @@ WHERE VARIABLE_NAME = 'Total assets' AND YEAR = 2019
 ORDER BY VALUE DESC LIMIT 1;
 ```
 This query selects the ENTITY_NAME and VALUE columns from the table where the VARIABLE_NAME is 'Total assets' and the YEAR is 2017."""
-    openai_create.return_value = create_openai_object_stream(SECOND_RESPONSE)
+    openai_create.return_value = create_stream_chat_completion(SECOND_RESPONSE)
     expected_df = pd.DataFrame({
         "ENTITY_NAME": ["JPMorgan Chase Bank, National Association"],
         "VALUE": [1651125000000]
