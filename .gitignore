@@ -3,4 +3,3 @@ venv
 .venv
 .python-version
 __pycache__
-secrets.toml
