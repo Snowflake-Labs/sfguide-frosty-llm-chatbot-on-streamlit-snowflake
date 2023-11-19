@@ -26,3 +26,29 @@ Press the button above to get started with this guide in GitHub Codespaces. This
 - The app needs secrets to be added, you'll need to configure `.streamlit/secrets.toml` in Codespaces (or similar) before the app succeeds. An example file is provided to help you get started. The app will show an exception on launch until this is added.
 - Please ensure codespace use is appropriate for the planned data access and usage. Consider using [encrypted secrets](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-encrypted-secrets-for-your-codespaces) for any sensitive credentials.
 - Learn more about Github Codespace free usage limits and billing [here](https://docs.github.com/en/billing/managing-billing-for-github-codespaces/about-billing-for-github-codespaces), and lifecycle of a codespace [here](https://docs.github.com/en/codespaces/getting-started/the-codespace-lifecycle).
+
+## Testing
+
+This repo provides automated tests of the Frosty app functionality using
+[Streamlit AppTest](https://docs.streamlit.io/library/advanced-features/app-testing).
+Tests are located in the `src/test_frosty.py` file and can be run using pytest. Calls to
+Snowflake and OpenAI are mocked using Python's unittest mock. This approach is effective
+for rapidly and consistently testing your app functionality in an automated development process.
+
+### Testing example output
+
+```sh
+$ pytest -v
+================ test session starts ================
+platform darwin -- Python 3.10.12, pytest-7.4.2, pluggy-1.3.0 --
+cachedir: .pytest_cache
+rootdir: /python/Snowflake-Labs/sfguide-frosty-llm-chatbot-on-snowflake
+plugins: anyio-3.7.1
+collected 3 items
+
+src/test_frosty.py::test_validate_creds PASSED [ 33%]
+src/test_frosty.py::test_prompts PASSED [ 66%]
+src/test_frosty.py::test_frosty_app PASSED [100%]
+
+================ 3 passed in 1.37s ================
+```
