@@ -1,6 +1,7 @@
 from openai import OpenAI
 import re
 import streamlit as st
+from charts import render_data
 from prompts import get_system_prompt
 
 st.title("☃️ Frosty")
@@ -17,13 +18,13 @@ if prompt := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": prompt})
 
 # display the existing chat messages
-for message in st.session_state.messages:
+for i, message in enumerate(st.session_state.messages):
     if message["role"] == "system":
         continue
     with st.chat_message(message["role"]):
         st.write(message["content"])
         if "results" in message:
-            st.dataframe(message["results"])
+            render_data(key=i, data=message["results"])
 
 # If last message is not from assistant, we need to generate a new response
 if st.session_state.messages[-1]["role"] != "assistant":
@@ -44,6 +45,6 @@ if st.session_state.messages[-1]["role"] != "assistant":
         if sql_match:
             sql = sql_match.group(1)
             conn = st.connection("snowflake")
-            message["results"] = conn.query(sql)
-            st.dataframe(message["results"])
+            message["results"] = {"data": conn.query(sql)}
+            render_data(key=len(st.session_state.messages), data=message["results"])
         st.session_state.messages.append(message)
