@@ -1,10 +1,11 @@
 import streamlit as st
 
-SCHEMA_PATH = st.secrets.get("SCHEMA_PATH", "FROSTY_SAMPLE.CYBERSYN_FINANCIAL")
-QUALIFIED_TABLE_NAME = f"{SCHEMA_PATH}.FINANCIAL_ENTITY_ANNUAL_TIME_SERIES"
+SCHEMA_PATH = st.secrets.get("SCHEMA_PATH", "GOLDCAST.ANALYTICS")
+QUALIFIED_TABLE_NAME = f"{SCHEMA_PATH}.ACTIVITY"
 TABLE_DESCRIPTION = """
-This table has various metrics for financial entities (also referred to as banks) since 1983.
-The user may describe the entities interchangeably as banks, financial institutions, or financial entities.
+This table has various columns like user ids, event ids, broadcast ids, booth ids, room ids.
+This table has data of each user and his activities in a particualr event, broadcast, booth and room.
+There are various activity types like Timespent, cta clicks, etc
 """
 # This query is optional if running Frosty on your own table, especially a wide table.
 # Since this is a deep table, it's useful to tell Frosty what variables are available.
@@ -85,7 +86,7 @@ def get_system_prompt():
     table_context = get_table_context(
         table_name=QUALIFIED_TABLE_NAME,
         table_description=TABLE_DESCRIPTION,
-        metadata_query=METADATA_QUERY
+        metadata_query=None
     )
     return GEN_SQL.format(context=table_context)
 
