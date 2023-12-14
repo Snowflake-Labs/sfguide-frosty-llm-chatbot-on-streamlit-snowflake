@@ -6,7 +6,7 @@ from prompts import get_system_prompt
 
 st.title("☃️ Frosty")
 
-openai.api_key = "17c4cf2ddb8a409ca45d34795ec3a058"
+openai.api_key = st.secrets.OPENAI_API_KEY
 openai.api_type = "azure"
 openai.api_version = "2023-05-15"
 openai.api_base = st.secrets.AZURE_OPENAI_ENDPOINT
