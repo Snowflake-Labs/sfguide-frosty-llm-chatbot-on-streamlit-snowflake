@@ -1,4 +1,7 @@
 import streamlit as st
+import pandas as pd
+
+from streamlit_gsheets import GSheetsConnection
 
 SCHEMA_PATH = st.secrets.get("SCHEMA_PATH", "GOLDCAST.ANALYTICS")
 QUALIFIED_TABLE_NAME = f"{SCHEMA_PATH}.ACTIVITY"
@@ -71,22 +74,36 @@ Here are the columns of the {'.'.join(table)}
 
 <columns>\n\n{columns}\n\n</columns>
     """
-    if metadata_query:
-        metadata = conn.query(metadata_query, show_spinner=False)
+    if metadata_query: #Using G sheet
+        #metadata = conn.query(metadata_query, show_spinner=False)
+        metadata = load_metadata_gsheet()
         metadata = "\n".join(
             [
-                f"- **{metadata['VARIABLE_NAME'][i]}**: {metadata['DEFINITION'][i]}"
-                for i in range(len(metadata["VARIABLE_NAME"]))
+                f"- **{var_name}**: {metadata[var_name]}"
+                for var_name in metadata
             ]
         )
         context = context + f"\n\nAvailable variables by VARIABLE_NAME:\n\n{metadata}"
     return context
 
+def load_metadata_gsheet():
+    conn = st.connection("gsheets", type=GSheetsConnection)
+    df = conn.read()
+    metadata_columns = {}
+
+    # Print results.
+    for row in df.itertuples():
+        # st.write(f"{row.name} has a :{row.pet}:")
+        if not pd.isnull(row.DEFINITION):
+            metadata_columns[row.VARIABLE_NAME] = row.DEFINITION
+
+    return metadata_columns
+
 def get_system_prompt():
     table_context = get_table_context(
         table_name=QUALIFIED_TABLE_NAME,
         table_description=TABLE_DESCRIPTION,
-        metadata_query=None
+        metadata_query="True"
     )
     return GEN_SQL.format(context=table_context)
 

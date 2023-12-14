@@ -1,5 +1,6 @@
 snowflake-snowpark-python[pandas]==1.7.0
 streamlit==1.28.1
 openai==1.2.2
+st-gsheets-connection==0.0.3
 
 pytest
