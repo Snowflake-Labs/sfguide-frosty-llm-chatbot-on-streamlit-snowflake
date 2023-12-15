@@ -23,7 +23,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
         with st.spinner("Thinking..."):
             r = OpenAI().chat.completions.create(
                 messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
-                model="gpt-3.5-turbo",
+                model="gpt-4",
             )
             response = r.choices[0].message.content
             st.write(response)
