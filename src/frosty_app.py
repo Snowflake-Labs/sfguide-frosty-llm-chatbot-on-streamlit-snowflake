@@ -4,7 +4,7 @@ import re
 import streamlit as st
 from prompts import get_system_prompt
 
-st.title("☃️ Frosty")
+st.title("️🤖GoldieBot")
 
 openai.api_key = st.secrets.OPENAI_API_KEY
 openai.api_type = "azure"

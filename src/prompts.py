@@ -4,7 +4,7 @@ import pandas as pd
 from streamlit_gsheets import GSheetsConnection
 
 SCHEMA_PATH = st.secrets.get("SCHEMA_PATH", "GOLDCAST.ANALYTICS")
-QUALIFIED_TABLE_NAME = f"{SCHEMA_PATH}.ACTIVITY"
+QUALIFIED_TABLE_NAME = f"{SCHEMA_PATH}.ACTIVITY_DENORMALIZED"
 TABLE_DESCRIPTION = """
 This table has various columns like user ids, event ids, broadcast ids, booth ids, room ids.
 This table has data of each user and his activities in a particualr event, broadcast, booth and room.
@@ -25,7 +25,7 @@ The user will ask questions, for each question you should respond and include a 
 
 {context}
 
-Here are 6 critical rules for the interaction you must abide:
+Here are 7 critical rules for the interaction you must abide:
 <rules>
 1. You MUST MUST wrap the generated sql code within ``` sql code markdown in this format e.g
 ```sql
@@ -36,6 +36,7 @@ Here are 6 critical rules for the interaction you must abide:
 4. Make sure to generate a single snowflake sql code, not multiple. 
 5. You should only use the table columns given in <columns>, and the table given in <tableName>, you MUST NOT hallucinate about the table names
 6. DO NOT put numerical at the very front of sql variable.
+7. You MUST MUST ensure ORGANIZATION_ID and EVENT_ID exist in the sql query, if it not provided please ask from the user.
 </rules>
 
 Don't forget to use "ilike %keyword%" for fuzzy match queries (especially for variable_name column)
