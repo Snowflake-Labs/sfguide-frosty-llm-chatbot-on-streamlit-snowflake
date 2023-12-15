@@ -4,6 +4,19 @@ import re
 import streamlit as st
 from prompts import get_system_prompt
 
+st.markdown(
+    """
+<style>
+    .stCodeBlock{
+        display: None;
+    }
+    
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
+
 st.title("️🤖GoldieBot")
 
 openai.api_key = st.secrets.OPENAI_API_KEY
