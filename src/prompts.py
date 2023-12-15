@@ -1,10 +1,14 @@
 import streamlit as st
+import pandas as pd
 
-SCHEMA_PATH = st.secrets.get("SCHEMA_PATH", "FROSTY_SAMPLE.CYBERSYN_FINANCIAL")
-QUALIFIED_TABLE_NAME = f"{SCHEMA_PATH}.FINANCIAL_ENTITY_ANNUAL_TIME_SERIES"
+from streamlit_gsheets import GSheetsConnection
+
+SCHEMA_PATH = st.secrets.get("SCHEMA_PATH", "GOLDCAST.ANALYTICS")
+QUALIFIED_TABLE_NAME = f"{SCHEMA_PATH}.ACTIVITY_DENORMALIZED"
 TABLE_DESCRIPTION = """
-This table has various metrics for financial entities (also referred to as banks) since 1983.
-The user may describe the entities interchangeably as banks, financial institutions, or financial entities.
+This table has various columns like user ids, event ids, broadcast ids, booth ids, room ids.
+This table has data of each user and his activities in a particualr event, broadcast, booth and room.
+There are various activity types like Timespent, cta clicks, etc
 """
 # This query is optional if running Frosty on your own table, especially a wide table.
 # Since this is a deep table, it's useful to tell Frosty what variables are available.
@@ -21,7 +25,7 @@ The user will ask questions, for each question you should respond and include a 
 
 {context}
 
-Here are 6 critical rules for the interaction you must abide:
+Here are 7 critical rules for the interaction you must abide:
 <rules>
 1. You MUST MUST wrap the generated sql code within ``` sql code markdown in this format e.g
 ```sql
@@ -32,6 +36,11 @@ Here are 6 critical rules for the interaction you must abide:
 4. Make sure to generate a single snowflake sql code, not multiple. 
 5. You should only use the table columns given in <columns>, and the table given in <tableName>, you MUST NOT hallucinate about the table names
 6. DO NOT put numerical at the very front of sql variable.
+7. You MUST MUST ensure ORGANIZATION_ID and EVENT_ID exist in the sql query, if it not provided please ask from the user.
+8. Do not mention SQL in your response, you are an AI expert, you don't need to mention SQL.
+9. There is no REGISTRATION activity type, you can use the USER_ID column to find the number of registrants.
+10. Do not use the word "query" in your response, you are an AI expert, you don't need to mention query.
+
 </rules>
 
 Don't forget to use "ilike %keyword%" for fuzzy match queries (especially for variable_name column)
@@ -70,22 +79,36 @@ Here are the columns of the {'.'.join(table)}
 
 <columns>\n\n{columns}\n\n</columns>
     """
-    if metadata_query:
-        metadata = conn.query(metadata_query, show_spinner=False)
+    if metadata_query: #Using G sheet
+        #metadata = conn.query(metadata_query, show_spinner=False)
+        metadata = load_metadata_gsheet()
         metadata = "\n".join(
             [
-                f"- **{metadata['VARIABLE_NAME'][i]}**: {metadata['DEFINITION'][i]}"
-                for i in range(len(metadata["VARIABLE_NAME"]))
+                f"- **{var_name}**: {metadata[var_name]}"
+                for var_name in metadata
             ]
         )
         context = context + f"\n\nAvailable variables by VARIABLE_NAME:\n\n{metadata}"
     return context
 
+def load_metadata_gsheet():
+    conn = st.connection("gsheets", type=GSheetsConnection)
+    df = conn.read()
+    metadata_columns = {}
+
+    # Print results.
+    for row in df.itertuples():
+        # st.write(f"{row.name} has a :{row.pet}:")
+        if not pd.isnull(row.DEFINITION):
+            metadata_columns[row.VARIABLE_NAME] = row.DEFINITION
+
+    return metadata_columns
+
 def get_system_prompt():
     table_context = get_table_context(
         table_name=QUALIFIED_TABLE_NAME,
         table_description=TABLE_DESCRIPTION,
-        metadata_query=METADATA_QUERY
+        metadata_query="True"
     )
     return GEN_SQL.format(context=table_context)
 

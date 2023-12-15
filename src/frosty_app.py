@@ -1,12 +1,33 @@
-from openai import OpenAI
+# from openai import OpenAI
+import openai
 import re
 import streamlit as st
 from prompts import get_system_prompt
 
-st.title("☃️ Frosty")
+st.markdown(
+    """
+<style>
+    .stCodeBlock{
+        display: None;
+    }
+    
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
+
+st.title("️🤖GoldieBot")
+
+openai.api_key = st.secrets.OPENAI_API_KEY
+openai.api_type = "azure"
+openai.api_version = "2023-05-15"
+openai.api_base = st.secrets.AZURE_OPENAI_ENDPOINT
+
 
 # Initialize the chat messages history
-client = OpenAI(api_key=st.secrets.OPENAI_API_KEY)
+# client = OpenAI(api_key=st.secrets.OPENAI_API_KEY)
+# client =
 if "messages" not in st.session_state:
     # system prompt includes table information, rules, and prompts the LLM to produce
     # a welcome message to the user.
@@ -30,8 +51,8 @@ if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
         response = ""
         resp_container = st.empty()
-        for delta in client.chat.completions.create(
-            model="gpt-3.5-turbo",
+        for delta in openai.chat.completions.create(
+            model="gpt-4",
             messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
             stream=True,
         ):
