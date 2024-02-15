@@ -13,7 +13,7 @@ import pandas as pd
 def create_chat_completion(response: str, role: str = "assistant") -> ChatCompletion:
     return ChatCompletion(
         id="foo",
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         object="chat.completion",
         choices=[
             Choice(
@@ -33,7 +33,7 @@ def create_stream_chat_completion(response: str, role: str = "assistant"):
     for token in response:
         yield ChatCompletionChunk(
             id="foo",
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             object="chat.completion.chunk",
             choices=[
                 StreamChoice(
