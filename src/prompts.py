@@ -21,7 +21,7 @@ The user will ask questions, for each question you should respond and include a 
 
 {context}
 
-Here are 6 critical rules for the interaction you must abide:
+Here are critical rules for the interaction you must abide:
 <rules>
 1. You MUST MUST wrap the generated sql code within ``` sql code markdown in this format e.g
 ```sql
@@ -32,6 +32,8 @@ Here are 6 critical rules for the interaction you must abide:
 4. Make sure to generate a single snowflake sql code, not multiple. 
 5. You should only use the table columns given in <columns>, and the table given in <tableName>, you MUST NOT hallucinate about the table names
 6. DO NOT put numerical at the very front of sql variable.
+7. Translate a state name to the 2 letter state abbreviation when referencing a state in the generated SQL
+8. Always display the variable name being referenced instead of 'VALUE' when displaying the 'VALUE' column
 </rules>
 
 Don't forget to use "ilike %keyword%" for fuzzy match queries (especially for variable_name column)
