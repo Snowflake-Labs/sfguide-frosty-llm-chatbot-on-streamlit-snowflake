@@ -20,9 +20,10 @@ if "messages" not in st.session_state:
     # system prompt includes table information, rules, and prompts the LLM to produce
     # a welcome message to the user.
     st.session_state.messages = [{"role": "system", "content": get_system_prompt()}]
-    if "suggested_prompts" not in st.session_state:
-        st.session_state.suggested_prompts = ["Show me the total excess by BU and Month", "What is the BOH $ by ODM and Month"]        
 
+    
+# lst_suggest = ["What is the BOH $ by ODM and Month", "Show me the total excess by BU and Month"]
+# st.session_state.messages.append({"role": "assistant", "content": pills("Example prompts:",lst_suggest) }) 
 
 # Prompt for user input and save
 if prompt := st.chat_input():   
@@ -37,9 +38,9 @@ for message in st.session_state.messages:
         st.write(message["content"])
         if "results" in message:
             st.dataframe(message["results"])
-        if "suggested_prompts" not in st.session_state:
-            st.session_state.suggested_prompts = ["Show me the total excess by BU and Month", "What is the BOH $ by ODM and Month"]        
-            suggested_prompt_selected = pills("Example prompts:", st.session_state.suggested_prompts) 
+        # if "suggested_prompts" in message:
+        #     # st.session_state.suggested_prompts = ["Show me the total excess by BU and Month", "What is the BOH $ by ODM and Month"]        
+        #     suggested_prompt_selected = pills("Example prompts:", lst_suggest) 
     
 
 # If last message is not from assistant, we need to generate a new response
